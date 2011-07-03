@@ -1,18 +1,18 @@
 <?php
 /**
- * Project:  RedeCard Client Webservice
- * File:     RedeCard.class.php
+ * Project:  Webservice Consumer of Brazilian Credit Card Operators
+ * File:     Cielo.class.php
  *
  * This code is released under the GNU General Public License.
- * See COPYRIGHT.txt and LICENSE.txt.
+ * See COPYRIGHT.txt and LICENSE.md
  *
  * If you would like to collaborate by suggesting code and documentation enhancements
- * then please check out readme.txt
+ * then please check out readme.md
  *  
- * @file This is the main Class
+ * @file This child class handles the data transactions between Cielo's webservice and the application
  * @copyright 2011 Drupalista.com.br 
  * @author Francisco Luz <franciscoferreiraluz at yahoo dot com dot au>
- * @package RedeCard Client Webservice
+ * @package BrazilCards
  * @version 1.0 Alpha
  *
  *  --------------------------------H I R I N G   M E ---------------------------------------------------
@@ -36,7 +36,7 @@
  *   Francisco Luz
  *   July 2011
  */
-class RedeCard {
+class Cielo extends BrazilCards {
     
     
     
