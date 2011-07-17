@@ -1,23 +1,29 @@
 <?php
     include_once('brazilcards-lib/BrazilCards.class.php');
     /**
-     * You have to check if this script is being called by Cielo. This will happen after the browser is redirected to cielo's authentication
-     * url which automatically redirect it back to the informed returning url.
+     * We have to check if this script is being called by Cielo as a result of a browser redirection.
+     * 
+     * To do that we check for $_GET['order'] which is only present when cielo redirects the browser back to the store.
      *
-     * By default the returning url is the script that instantiates the object. In this example case it is this very own
-     * script, that is ../example.php
+     * By default the returning url is the script that instantiates the object. In this study case it will be example.php
+     * You might want to change that by assigning a new value to request_data['return_url'] property.
+     * 
+     * ie. $myObject->request_data['return_url'] = 'path/my_return_script.php?order='.$order['number']; or
+     *     $myObject->request_data['return_url'] = 'path/my_return_script.php';
+     *
+     * Do the above right after you instantiate the object and before calling $myObject->authorize();
      * 
      */
     if(empty($_GET['order'])){
         /** we are still on checkout **/
         $checkOut = TRUE;
         
-        //these are the purchase order details obtained through out the checkout process
+        //these are the purchase order details obtained from the checkout process
         $order = array('number'      => 1234,    //Order Number
                        'totalAmount' => '10.10', //purchase order total amount
                        );
         
-        //these are the purchase order PAYMENT details obtained through out the checkout process
+        //these are the purchase order PAYMENT details obtained from the checkout process
         $payment = array('CardFlag'        => 'mastercard', //Possible values are mastercard, elo or visa (lower case)
                          'Installments'    => 3,            //when set the value must be greater than 1 and 'InstallmentType' must be set to 2 or 3
                                                             //Default == 1
