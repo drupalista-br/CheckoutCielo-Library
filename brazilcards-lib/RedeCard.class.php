@@ -75,7 +75,7 @@ class RedeCard extends BrazilCards {
         try{
             $this->server = new SoapClient($this->ws['url'].'?wsdl');
         }catch(SoapFault $e){
-             Drupalista_BPM::setWarning(array('exception', $e));
+             Commons::setWarning(array('exception', $e));
         }
     }
 

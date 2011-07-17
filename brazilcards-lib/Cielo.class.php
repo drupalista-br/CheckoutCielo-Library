@@ -295,7 +295,7 @@ class Cielo extends BrazilCards {
             
         }else{
 
-            Drupalista_BPM::setWarning(array('curl_error', curl_error($sessao_curl)));
+            Commons::setWarning(array('curl_error', curl_error($sessao_curl)));
         }
     }
 }

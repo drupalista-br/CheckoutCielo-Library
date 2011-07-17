@@ -20,7 +20,7 @@
         
         //these are the purchase order details obtained from the checkout process
         $order = array('number'      => 1234,    //Order Number
-                       'totalAmount' => '10.10', //purchase order total amount
+                       'totalAmount' => '10.00', //purchase order total amount
                        );
         
         //these are the purchase order PAYMENT details obtained from the checkout process
@@ -48,8 +48,8 @@
                           
                           //attribute settings
                           'Authenticate'      => false, //default is true. This will be ignored if card details are not collected / set
-                          'AuthorizationType' => 1,     //Default == 1. Possible values are 0 == authentication only, 1 == authorize only if authenticaded, 2 == authorize either authenticated or not, 3 == skip authentication and go straight to authorization
-                          //'AutoCapturer'      => true,  //Default is 'false', if set to 'true' then your application won't need to explicity call capture() as capturing will be done at authorization phase
+                          'AuthorizationType' => 3,     //Default == 1. Possible values are 0 == authentication only, 1 == authorize only if authenticaded, 2 == authorize either authenticated or not, 3 == skip authentication and go straight to authorization
+                          'AutoCapturer'      => true,  //Default is 'false', if set to 'true' then your application won't need to explicity call capture() as capturing will be done at authorization phase
                          );
         
     }else{
@@ -89,7 +89,7 @@
                        'payment' => array('CardFlag'          => $payment['CardFlag'],
                                           'Installments'      => $payment['Installments'],
                                           'InstallmentType'   => $payment['InstallmentType'],
-
+                                        //card details might be added here if this is a checkout process.
                                          ),
                        );
 
@@ -108,14 +108,15 @@
     if($checkOut){
         /** Browser is still on Checkout phase **/
         
+        //check if card details were collected by the merchant store
         if(!empty($payment['CardNumber'])){
-            //card details collected at the checkout. Again, do not save them into the database
+            //Again, do not save them into the database
             $arguments['payment']['CardNumber']     = $payment['CardNumber'];
             $arguments['payment']['CardExpiration'] = $payment['CardExpiration'];
             $arguments['payment']['CardSecCode']    = $payment['CardSecCode'];
         }
         
-        //these values should be saved into the database. But for the sake of this demonstration we are putting them into a cookie
+        //these values should be saved into the database. But for the sake of this demonstration we are putting them into cookies
         setcookie('totalAmount',     $order['totalAmount']);
         
         //payment details

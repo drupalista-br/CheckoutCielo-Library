@@ -37,16 +37,18 @@
  *   Francisco Luz
  *   July 2011
  */
-include_once('../Drupalista_BPM/Drupalista_BPM.class.php');
+include_once('Commons/Commons.class.php');
 
-class BrazilCards extends Drupalista_BPM {
+class BrazilCards extends Commons {
     //Defines which operators child class will handle transactions
     //Defaut == 'RedeCard'
     public $operator = 'RedeCard';
     
     public $membership = array();
     
-    public $order = array(); 
+    public $order = array();
+    
+    public $payment = array();
     
     //if no argument is sent saying otherwise, this property is defaulted to FALSE
     public $is_test = FALSE;
