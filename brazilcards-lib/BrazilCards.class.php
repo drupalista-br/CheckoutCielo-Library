@@ -1,20 +1,21 @@
 <?php
 /**
- * Project: Webservice Consumer of Brazilian Credit Card Operators
- * File:    BrazilCards.class.php
+ * Project:  Webservice Consumer on Brazilian Credit Card Operators
+ * File:     Cielo.class.php
  *
- * This code is released under the GNU General Public License.
- * See COPYRIGHT.txt and LICENSE.md
+ * This code is released under the Creative Commons CC BY-NC 3.0 
+ * Visit http://creativecommons.org/licenses/by-nc/3.0/br/ for more information
+ * on this licence.
  *
- * If you would like to collaborate by suggesting code and documentation enhancements
- * then please check out readme.md
- *  
- * @file This is the main parent class
+ * You are required to purchase a license permission for comercial use of this code.
+ *
+ * @file Main Class for Object Instantiation
  * @copyright 2011 Drupalista.com.br 
  * @author Francisco Luz <franciscoferreiraluz at yahoo dot com dot au>
  * @package BrazilCards
  * @version 1.0 Alpha
- *
+ * @license http://creativecommons.org/licenses/by-nc/3.0/br/ CC BY-NC 3.0 
+ * 
  *  --------------------------------H I R I N G   M E ---------------------------------------------------
  *  
  * - I am available for freelancing jobs and casual employment.
@@ -30,15 +31,63 @@
  *
  *   Contact me via
  *   E-mail: contato at drupalista dot com dot br
- *   Phone: +55 66 3521 9132 (Business hours, my time zone is Cuiaba, Brazil)
+ *   Phone: +55 66 3521 9132 (Business hours, my time zone is Cuiaba, Brazil GMT -4)
  *   Mobile: +55 66 9245 5809
  *
  *   Francisco Luz
  *   July 2011
  */
-class BrazilCards {
+include_once('../Drupalista_BPM/Drupalista_BPM.class.php');
+
+class BrazilCards extends Drupalista_BPM {
+    //Defines which operators child class will handle transactions
+    //Defaut == 'RedeCard'
+    public $operator = 'RedeCard';
     
+    public $membership = array();
     
+    public $order = array(); 
+    
+    //if no argument is sent saying otherwise, this property is defaulted to FALSE
+    public $is_test = FALSE;
+    
+    //here, the operator class will set all the necessary data to successfully connect to the remote server
+    public $ws = array();
+    
+    //all the arguments handled over by the application
+    public $arguments = array();
+    
+    //parameters that will be used by the webservice methods
+    public $parameters = array();
+    
+    //holds the last response from the server. Check also $warnings property to find out if there is any error message or an exception
+    public $response;
+    
+    public function __construct($arguments){
+        foreach($arguments as $argument => $value){
+            //assign the arguments sent through
+            $this->arguments[$argument] = $value;
+            
+            //assign values to properties
+            $this->$argument = $value;
+        }
+        
+        //include operator's class
+        $operator = $this->operator;
+        include_once($operator.'.class.php');
+        $operator::setUp();
+
+    }
+    
+    public function authorize($parameters = NULL){
+        $operator = $this->operator;       
+        $operator::authorize($parameters);
+    }
+ 
+    public function capture(){
+        
+        
+    } 
     
 }
 ?>
