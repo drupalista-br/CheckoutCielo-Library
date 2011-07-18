@@ -1,7 +1,7 @@
 <?php
 /**
  * Project:  Webservice Consumer on Brazilian Credit Card Operators
- * File:     Cielo.class.php
+ * File:     BrazilCards.class.php
  *
  * This code is released under the Creative Commons CC BY-NC 3.0 
  * Visit http://creativecommons.org/licenses/by-nc/3.0/br/ for more information

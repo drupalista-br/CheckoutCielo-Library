@@ -95,10 +95,9 @@ class Cielo extends BrazilCards {
         $this->request_data['return_url'] = $http.$domainName.$_SERVER["PHP_SELF"].'?order='.$this->order['pedido'];
         
         /** format po value **/
-        //replace an eventual comma for a dot
-        $this->order['TotalAmount'] = str_replace(',','.', $this->order['TotalAmount']);
-        //now remove the dot from it
-        $this->order['TotalAmount'] = number_format($this->order['TotalAmount'], 0, '', '');
+        //remove decimal separators
+        $this->order['TotalAmount'] = str_replace(',','', $this->order['TotalAmount']);
+        $this->order['TotalAmount'] = str_replace('.','', $this->order['TotalAmount']);
         
         //set up payment attributes
         self::setPaymentAttributes();
@@ -146,7 +145,22 @@ class Cielo extends BrazilCards {
         
         
     }
+
+    public function capture($parameters){
+        Commons::setWarning(array('capture()', 'Cielo does not provide a capture method. You should instead set \'AutoCapturer\' = TRUE (this is the default) at authorize phase.'));
+        
+    }
     
+    public function capturePreAuthorize($parameters){
+        
+        
+    }
+    
+    public function voidTransaction($parameters){
+        
+        
+    }
+
     
     /**
      * Helper function
@@ -165,7 +179,7 @@ class Cielo extends BrazilCards {
                                                        ),
                            'InstallmentType'   => array('#default'  => 1,
                                                        ),
-                           'AutoCapturer'      => array('#default'  => 'false',
+                           'AutoCapturer'      => array('#default'  => 'true',
                                                         '#expected' => array('false', 'true',),
                                                        ),
                            'AuthorizationType' => array('#default'  => 1,
