@@ -240,8 +240,8 @@ switch($_GET['screen']){
 								<tr>
 									<td>Try Authentication?</td>
 									<td>
-										<input type="radio" name="authenticate" value="sim"/>Yes
-										<input type="radio" name="authenticate" value="nao" checked="checked"/>No
+										<input type="radio" name="authenticate" value="1"/>Yes
+										<input type="radio" name="authenticate" value="0" checked="checked"/>No
 									</td>
 								</tr>
 								<tr>

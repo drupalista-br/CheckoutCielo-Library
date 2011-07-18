@@ -19,21 +19,6 @@
         //$_POST['card_expiration'] = '201508';
         //$_POST['card_code'] = '973';
         
-        /** define InstallmentType **/
-        if($_POST['inst'] > 1){
-            //payment is gonna be on installment term
-            $installmentType    = $_POST['creditor'];
-            
-        }else{
-            //one single payment on credit card
-            $installmentType = 1;
-            
-            if($_POST['card_type'] == 'A'){
-                //Debit Card
-                $installmentType = 'A';
-            }
-        }
-
         /** Get purchase order details from check out processing **/
         $order = array('number'      => $_POST['po_#'],        //Order Number
                        'totalAmount' => $_POST['order_total'], //purchase order total amount
@@ -41,14 +26,14 @@
 
         $payment = array('CardFlag'        => $_POST['card_flag'], //Possible values are mastercard, elo or visa (lower case)
                          'Installments'    => $_POST['inst'],      //when set the value must be greater than 1 and 'InstallmentType' must be set to 2 or 3
+                                                                   //Default == 1 (one full payment on credit)
+                         'Creditor'        => $_POST['creditor'],  //when 'Installments' > 1 then this value gotta be either 2 == merchant is the creditor or 3 == cielo is the creditor
+                                                                   //Default == 3
+                         'CardType'        => $_POST['card_type'], //Possible values are A == Debit Card, 1 == Credit Card
                                                                    //Default == 1
-                       
-                         'InstallmentType' => $installmentType,    //Possible values are A == Debit, 1 == one full payment on credit, when 'Installments' > 1 then the value must be 2 == merchant is the creditor or 3 == cielo is the creditor
-                                                                   //Defaults are:  == 3 if 'Installments' > 1,  == 1 if 'Installments' == 1 and 'InstallmentType' != 1 or != A
-
                           //attribute settings
                           'AuthorizationType' => $_POST['authorization_type'], //Default == 1. Possible values are 0 == authentication only, 1 == authorize only if authenticaded, 2 == authorize either authenticated or not, 3 == skip authentication and go straight to authorization
-                          'AutoCapturer'      => $_POST['auto_capture'],       //Default is 'false', if set to 'true' then your application won't need to explicity call capture() as capturing will be done at authorization phase
+                          'AutoCapturer'      => $_POST['auto_capture'],       //Default is 'false'. This replaces the method capture() as capturing will be automatically done at authorization phase
                          );
         
         $payment['Authenticate'] = '';
@@ -67,7 +52,8 @@
         
         $payment = array('CardFlag'        => $_COOKIE['CardFlag'],
                          'Installments'    => $_COOKIE['Installments'],
-                         'InstallmentType' => $_COOKIE['InstallmentType'],
+                         'Creditor'        => $_COOKIE['Creditor'],
+                         'CardType'        => $_COOKIE['CardType'],
                          
                          'Authenticate'      => $_COOKIE['Authenticate'], 
                          'AuthorizationType' => $_COOKIE['AuthorizationType'],     
@@ -96,7 +82,9 @@
                        //payment details
                        'payment' => array('CardFlag'          => $payment['CardFlag'],
                                           'Installments'      => $payment['Installments'],
-                                          'InstallmentType'   => $payment['InstallmentType'],
+                                          'Creditor'          => $payment['Creditor'],
+                                          'CardType'          => $payment['CardType'],
+
                                           'Authenticate'      => $payment['Authenticate'],
                                           'AuthorizationType' => $payment['AuthorizationType'],
                                           'AutoCapturer'      => $payment['AutoCapturer'],
@@ -144,14 +132,17 @@
         setcookie('totalAmount',     $order['totalAmount']);
         setcookie('CardFlag',        $payment['CardFlag']);
         setcookie('Installments',    $payment['Installments']);
-        setcookie('InstallmentType', $payment['InstallmentType']);
+        setcookie('Creditor',        $payment['Creditor']);
+        setcookie('CardType',        $payment['CardType']);
         setcookie('Authenticate',      $payment['Authenticate']);
         setcookie('AuthorizationType', $payment['AuthorizationType']);
         setcookie('AutoCapturer',      $payment['AutoCapturer']);
 
         //request authorization
         $Cielo->authorize();
-
+        
+        //save transaction id      
+        setcookie('tid',      $Cielo->response->tid);
 
     }else{
         /** Browser is returning from authentication at cielo's webservice **/

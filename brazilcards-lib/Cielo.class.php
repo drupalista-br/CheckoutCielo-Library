@@ -175,7 +175,11 @@ class Cielo extends BrazilCards {
          **/
         $checkList = array('Installments'      => array('#default'  => 1,
                                                        ),
-                           'InstallmentType'   => array('#default'  => 1,
+                           'Creditor'          => array('#default'  => 3,
+                                                        '#expected' => array('2','3'),
+                                                       ),
+                           'CardType'          => array('#default'  => 1,
+                                                        '#expected' => array('A','1'),
                                                        ),
                            'AutoCapturer'      => array('#default'  => 'true',
                                                         '#expected' => array('false', 'true',),
@@ -206,20 +210,14 @@ class Cielo extends BrazilCards {
         if($this->parameters['AutoCapturer'] == 1){
             $this->parameters['AutoCapturer'] = 'true';    
         }
-        
-        //validate 'InstallmentType'
+
+        /** define InstallmentType **/
+        //one single payment
+        $this->parameters['InstallmentType'] = $this->parameters['CardType']; //either A (Debit Card) or 1 (Credit Card)
+        //payment on installment term
         if($this->parameters['Installments'] > 1){
-            //payment will be made in installments
-            if($this->parameters['InstallmentType'] != 2 && $this->parameters['InstallmentType'] != 3){
-                //we set Cielo as the creditor
-                $this->parameters['InstallmentType'] = 3;
-            }
-        }else{
-            //one single payment will be made which should be either on Debit Card (A) or on Credit Card (1)
-            if($this->parameters['InstallmentType'] != 1 && $this->parameters['InstallmentType'] != 'A'){
-                //we set it as one single payment on Credit Card
-                $this->parameters['InstallmentType'] = 1;
-            }
+            //define who has the guts to be the creditor
+            $this->parameters['InstallmentType'] = $this->parameters['Creditor'];  //2 (merchant) or 3 (cielo)
         }
         
         //check if card details are being collected by the merchant
