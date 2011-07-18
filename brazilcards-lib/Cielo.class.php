@@ -1,6 +1,6 @@
 <?php
 /**
- * Project:  Webservice Consumer on Brazilian Credit Card Operators
+ * Project:  Webservice Consumer on the Brazilian Credit Card Operators
  * File:     Cielo.class.php
  *
  * This code is released under the Creative Commons CC BY-NC 3.0 
@@ -76,7 +76,6 @@ class Cielo extends BrazilCards {
                                     'request_id'    => md5(date("YmdHisu")), //xml request id
                                     'date_time'     => date("Y-m-d\TH:i:s"), //date and time
                                     
-                                    //this is eventually used after getting for saving responses tid
                                     'tid'           => '',
                                    );
         

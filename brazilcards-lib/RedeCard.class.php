@@ -1,6 +1,6 @@
 <?php
 /**
- * Project:  Webservice Consumer on Brazilian Credit Card Operators
+ * Project:  Webservice Consumer on the Brazilian Credit Card Operators
  * File:     RedeCard.class.php
  *
  * This code is released under the Creative Commons CC BY-NC 3.0 

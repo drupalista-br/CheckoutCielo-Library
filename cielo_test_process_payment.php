@@ -110,7 +110,7 @@
      *            risky to keep credit card details stored in a remote web hosting server.
      *            Only collect the data and pass them through. Obviously you need a SSL certificate for data encrypting.
      */
-    //check if card details were collected by at merchant's store
+    //check if card details were collected at merchant's store
     if(isset($_POST['card_number'])){
         //Again, do not save them into the database
         $arguments['payment']['CardNumber']     = $_POST['card_number'];     //see list of card numbers that can be used in the sandBox enviroment at the end of this file
@@ -118,22 +118,22 @@
         $arguments['payment']['CardSecCode']    = $_POST['card_code'];       //3 digits number
     }    
     
-    
-
     /** instantiate a new Payment Object **/
     include_once('brazilcards-lib/BrazilCards.class.php');
     $Cielo = new BrazilCards($arguments);
 
     /**
-     * When a redirection to cielo for card handling has to be done then the library sets a default the returning url
-     * which is the script that instantiates the payment object. In this study case it is cielo_test_process_payment.php
+     * When a redirection to cielo for card handling has to be done then the library sets a default url value for returning
+     * back to the store.
+     * This default url is the script that instantiates the payment object. In this study case it is
+     * http://www.myStoreDomain.com/my_path/cielo_test_process_payment.php
      * 
      * You might want to change that by assigning a new value to request_data['return_url'] property. Like this:
      * 
-     * $myObject->request_data['return_url'] = 'path/my_return_script.php?order='.$order['number'];
+     * $Cielo->request_data['return_url'] = 'http://www.myStoreDomain.com/my_path/my_return_script.php?order='.$order['number'];
      *
-     * or if you want to set a file only for processing the webservice response then you dont need to inform the querystring 'order'
-     *   ie. $myObject->request_data['return_url'] = 'path/my_return_script.php';
+     * or if you want to set a file only for processing the webservice response then you dont need to inform the query string 'order'
+     *   ie. $Cielo->request_data['return_url'] = 'http://www.myStoreDomain.com/my_path/my_return_script.php';
      * 
      */
 

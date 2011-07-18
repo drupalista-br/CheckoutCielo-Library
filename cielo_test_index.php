@@ -21,11 +21,25 @@ switch($_GET['screen']){
 			<br>
 			<a href="cielo_test_index.php?screen=cart_merchant">Purchase Order (Customers provide their Card Details at Merchant's Website)</a>
 			<br>
-			<a href="pedidos.php?screen=orders">Pedidos efetuados</a>
+			<a href="cielo_test_index.php?screen=order">Last Purchase Order</a>
 			<br>
-			<a href="gerenciarTransacao.php?screen=actions">Gerenciar Transação</a>
+			<a href="cielo_test_index.php?screen=action">Action Manager</a>
 		</h4>
 	</center>
+	<br>
+	<center>
+		<h4>Portuguese Menu</h4>
+		<h4>
+			<a href="cielo_test_index.php?screen=cart_cielo">Fazer Pedido (Redireciona para a Cielo coletar os dados do Cartao)</a>
+			<br>
+			<a href="cielo_test_index.php?screen=cart_merchant">Fazer Pedido (Dados do Cartao e' coletado pela Loja)</a>
+			<br>
+			<a href="cielo_test_index.php?screen=order">Ultimo Pedido</a>
+			<br>
+			<a href="cielo_test_index.php?screen=action">Gerenciar Acoes</a>
+		</h4>
+	</center>
+	
 <?php
   break;
   case 'cart_cielo': ?>
