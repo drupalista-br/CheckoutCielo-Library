@@ -73,7 +73,6 @@ class Cielo extends BrazilCards {
         $this->request_data = array('xsd_version'   => '1.1.0',              //cielo's xsd version
                                     'currency_code' => 986,                  //Currency code, defaulted to BRL
                                     'language_code' => 'PT',                 //language code
-                                    'request_id'    => md5(date("YmdHisu")), //xml request id
                                     'date_time'     => date("Y-m-d\TH:i:s"), //date and time
                                     
                                     'tid'           => '',

@@ -273,8 +273,8 @@ switch($_GET['screen']){
 } ?>
 
 
-
-
-
-	
+<br><br><br><br>
+<center>
+<a rel="license" href="http://creativecommons.org/licenses/by-nc/3.0/br/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/3.0/br/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">BrazilCards PHP Library</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://drupalista-br.github.com/BrazilCards/" property="cc:attributionName" rel="cc:attributionURL">Francisco Luz</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc/3.0/br/">Creative Commons Attribution-NonCommercial 3.0 Brazil License</a>.
+</center>	
 </html>

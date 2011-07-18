@@ -52,7 +52,7 @@ class xml_xsd extends Cielo {
      */
     public function requisicao_transacao(){
         return  "<?xml version='1.0' encoding='ISO-8859-1'?>".
-                    "<requisicao-transacao id='".$this->request_data['request_id']."' versao='".$this->request_data['xsd_version']."'>".
+                    "<requisicao-transacao id='".md5(date("YmdHisu"))."' versao='".$this->request_data['xsd_version']."'>".
                         self::dados_ec().
                         self::dados_portador().
                         self::dados_pedido().
@@ -66,7 +66,7 @@ class xml_xsd extends Cielo {
    
     public function requisicao_tid(){
         return  "<?xml version='1.0' encoding='ISO-8859-1'?>".
-                    "<requisicao-tid id='".$this->request_data['request_id']."' versao='".$this->request_data['xsd_version']."'>".
+                    "<requisicao-tid id='".md5(date("YmdHisu"))."' versao='".$this->request_data['xsd_version']."'>".
                         self::dados_ec().
                         self::forma_pagamento().
                     "</requisicao-tid>";
@@ -74,7 +74,7 @@ class xml_xsd extends Cielo {
 
     public function requisicao_autorizacao_portador(){
         return  "<?xml version='1.0' encoding='ISO-8859-1'?>".
-                    "<requisicao-autorizacao-portador id='".$this->request_data['request_id']."' versao='".$this->request_data['xsd_version']."'>".
+                    "<requisicao-autorizacao-portador id='".md5(date("YmdHisu"))."' versao='".$this->request_data['xsd_version']."'>".
                         "<tid>".$this->request_data['tid']."</tid>".
                         self::dados_ec().
                         self::dados_cartao().
@@ -86,7 +86,7 @@ class xml_xsd extends Cielo {
     
     public function requisicao_autorizacao_tid(){
         return  "<?xml version='1.0' encoding='ISO-8859-1'?>".
-                    "<requisicao-autorizacao-tid id='".$this->request_data['request_id']."' versao='".$this->request_data['xsd_version']."'>".
+                    "<requisicao-autorizacao-tid id='".md5(date("YmdHisu"))."' versao='".$this->request_data['xsd_version']."'>".
                         "<tid>".$this->request_data['tid']."</tid>".
                         self::dados_ec().
                     "</requisicao-autorizacao-tid>";
@@ -94,7 +94,7 @@ class xml_xsd extends Cielo {
     
     public function requisicao_consulta(){
         return "<?xml version='1.0' encoding='ISO-8859-1'?>".
-                    "<requisicao-consulta id='".$this->request_data['request_id']."' versao='".$this->request_data['xsd_version']."'>".
+                    "<requisicao-consulta id='".md5(date("YmdHisu"))."' versao='".$this->request_data['xsd_version']."'>".
                             "<tid>".$this->request_data['tid']."</tid>".
                             self::dados_ec().
                     "</requisicao-consulta>";
