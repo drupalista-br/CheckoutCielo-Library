@@ -14,31 +14,26 @@ switch($_GET['screen']){
 	<head>
 		<title>Demo : Shopping Cart for Payment Processing via Cielo</title>
 	</head>
-	<center>
-		<h2>Demo : Shopping Cart for Payment Processing via Cielo</h2>
-		<h4>
-			<a href="cielo_test_index.php?screen=cart_cielo">Purchase Order (Redirects to Cielo for Card Handling)</a>
-			<br>
-			<a href="cielo_test_index.php?screen=cart_merchant">Purchase Order (Customers provide their Card Details at Merchant's Website)</a>
-			<br>
-			<a href="cielo_test_index.php?screen=order">Last Purchase Order</a>
-			<br>
-			<a href="cielo_test_index.php?screen=action">Action Manager</a>
-		</h4>
-	</center>
+	<h2>Demo : Shopping Cart for Payment Processing via Cielo</h2>
+	<h4>
+		<a href="cielo_test_index.php?screen=cart_cielo">Purchase Order (Redirects to Cielo for Card Handling)</a>
+		<br>
+		<a href="cielo_test_index.php?screen=cart_merchant">Purchase Order (Customers provide their Card Details at Merchant's Website)</a>
+		<br><br>
+		<a href="cielo_test_index.php?screen=cart_manage_po">Purchase Order Manager</a>
+
+	</h4>
+
 	<br>
-	<center>
-		<h4>Portuguese Menu</h4>
-		<h4>
-			<a href="cielo_test_index.php?screen=cart_cielo">Fazer Pedido (Redireciona para a Cielo coletar os dados do Cartao)</a>
-			<br>
-			<a href="cielo_test_index.php?screen=cart_merchant">Fazer Pedido (Dados do Cartao e' coletado pela Loja)</a>
-			<br>
-			<a href="cielo_test_index.php?screen=order">Ultimo Pedido</a>
-			<br>
-			<a href="cielo_test_index.php?screen=action">Gerenciar Acoes</a>
-		</h4>
-	</center>
+	<h2>Portuguese</h2>
+	<h4>
+		<a href="cielo_test_index.php?screen=cart_cielo">Fazer Pedido (Redireciona para a Cielo coletar os dados do Cartao)</a>
+		<br>
+		<a href="cielo_test_index.php?screen=cart_merchant">Fazer Pedido (Dados do Cartao e' coletado pela Loja)</a>
+		<br><br>
+		<a href="cielo_test_index.php?screen=cart_manage_po">Gerenciador de Pedidos</a>
+
+	</h4>
 	
 <?php
   break;
@@ -268,6 +263,117 @@ switch($_GET['screen']){
 			<a href="cielo_test_index.php">Menu</a>
 		</center>
 	</body>
+	
+<?php
+  break;
+  case 'cart_manage_po':
+	//Status code descriptions
+	$status = array(0 => 'Transaction was created',
+			1 => 'In progress',
+			2 => 'Authenticated',
+			3 => 'Not Authenticated',
+			4 => 'Authorized or still to be Captured',
+			5 => 'Not Authorized',
+			6 => 'Captured',
+			8 => 'Not Captured',
+			9 => 'Voided (Cancelada)',
+			10 => 'Being Authenticated',
+		       );
+  
+	$rows = array();
+	/** Query our cookie database **/
+	foreach($_COOKIE as $rowId => $rowData){
+		if(is_numeric($rowId)){
+			$rowData = explode(':', $rowData);
+			
+			foreach($rowData as $fieldName){
+				//separete field name from field value
+				$field  		   = explode('=', $fieldName);
+				$rows[$rowId][$field[0]] = $field[1];
+				
+				//Status Description
+				if($field[0] == 'status'){
+					$rows[$rowId]['status_description'] = $status[$field[1]];
+				}
+			}
+		}
+	}
+  ?>
+  
+    <!-- /** Managing Purchase Orders **/ -->
+    
+	<head>
+		<title>Shopping Cart : Purchase Orders</title>
+		<script type="text/javascript">
+			function executar() {
+				window.open("", "tela_operacao", "toolbar=0,location=0,directories=0,status=1,menubar=0,scrollbars=1,resizable=0,screenX=0,screenY=0,left=0,top=0,width=625,height=725");				
+				return true;
+			}		
+		</script>
+	</head>
+	<center>
+		<h2>Placed Orders</h2>
+		
+		<table border="1">
+			<tr>				
+				<th>PO #</th>
+				<th>Amount</th>
+				<th>Mode</th>
+				<th>Installments</th>
+				<th>TID</th>
+				<th>Status</th>
+				<th>Amount to Capture</th>
+				<th>Action</th>
+				<th></th>
+			</tr>
+			<form action="cielo_test_process_payment.php?order=manager" target="tela_operacao" onsubmit="javascript:executar();" method="post">
+
+		<?php
+		foreach($rows as $rowId => $data){
+		?>
+			<input type="hidden" name="order" value="<?php echo $rowId; ?>"/>
+			<input type="hidden" name="key" value="' . $iterator->key() . '"/>
+			<tr>
+			<td><?php echo $rowId; ?></td>
+			<td align="right"><?php echo $data['totalAmount']; ?></td>
+			<td><?php echo ($data['CardType'] == 1)?'Credit':'Debit'; ?></td>
+			<td><?php echo $data['Installments']; ?></td>
+			<td><?php echo $data['tid']; ?></td>
+			<td style="color: red;"><?php echo $data['status_description']; ?></td>
+			<td align="right">
+				<select name="percentualCaptura">
+					<option value="100">100%</option>
+					<option value="90">90%</option>
+					<option value="30">30%</option>
+				</select>
+			</td>
+			<td align="right">
+				<select name="acao">
+					<option value="autorizar">Authorize</option>
+					<option value="capturar">Capture</option>
+					<option value="cancelar">Void (Cancelar)</option>
+					<option value="consultar">Follow Up (Consultar)</option>
+				</select>
+				</td>
+			<td><input type="submit" value="Run" /></td> 
+			</tr>
+			</form>
+		<?php
+		}
+		if(empty($rows)){
+		?>
+			<tr>
+			<td colspan="10" style="text-align: center;">No purcharse order has been found.</td>
+			</tr>
+		<?php
+		}
+		?>
+
+		</table>		
+		<p>
+			<a href="cielo_test_index.php">Menu</a>
+		</p>
+	</center>
 <?php
   break;
 } ?>

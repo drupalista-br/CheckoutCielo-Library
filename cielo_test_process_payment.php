@@ -8,17 +8,6 @@
         /** We are still on checkout. Browser hasn't visited cielo as yet **/
         $checkOut = TRUE;
         
-        //$_POST['po_#'] = '1234';
-        //$_POST['order_total'] = '100.00';
-        //$_POST['card_flag'] = 'mastercard';
-        //$_POST['inst'] = 1;
-        //$_POST['authorization_type'] = 3;
-        //$_POST['auto_capture']
-        
-        //$_POST['card_number'] = '4551870000000183';
-        //$_POST['card_expiration'] = '201508';
-        //$_POST['card_code'] = '973';
-        
         /** Get purchase order details from check out processing **/
         $order = array('number'      => $_POST['po_#'],        //Order Number
                        'totalAmount' => $_POST['order_total'], //purchase order total amount
@@ -31,9 +20,9 @@
                                                                    //Default == 3
                          'CardType'        => $_POST['card_type'], //Possible values are A == Debit Card, 1 == Credit Card
                                                                    //Default == 1
-                          //attribute settings
-                          'AuthorizationType' => $_POST['authorization_type'], //Default == 1. Possible values are 0 == authentication only, 1 == authorize only if authenticaded, 2 == authorize either authenticated or not, 3 == skip authentication and go straight to authorization
-                          'AutoCapturer'      => $_POST['auto_capture'],       //Default is 'false'. This replaces the method capture() as capturing will be automatically done at authorization phase
+                         //attribute settings
+                         'AuthorizationType' => $_POST['authorization_type'], //Default == 1. Possible values are 0 == authentication only, 1 == authorize only if authenticaded, 2 == authorize either authenticated or not, 3 == skip authentication and go straight to authorization
+                         'AutoCapturer'      => $_POST['auto_capture'],       //Default is 'false'. This replaces the method capture() as capturing will be automatically done at authorization phase
                          );
         
         $payment['Authenticate'] = '';
@@ -45,21 +34,30 @@
         /** This is a redirection from cielo **/
         $checkOut = FALSE;
         
-        //Retrieve purchase order from database. For the sake of this demonstration we have saved them into cookies
+        //Retrieve purchase order from database. For the sake of this demonstration we have saved them into a cookie
+        //query for a cookie (which is our table row) that has a name (row id) equal to the po number and then break the fields down into an array
+        $queryDataBase = explode(':', $_COOKIE[$_GET['order']]);
+        
+        foreach($queryDataBase as $fieldName){
+            //separete field name from field value
+            $field                 = explode('=', $fieldName);
+            $fieldValue[$field[0]] = $field[1];
+        }
+        
         $order = array('number'      => $_GET['order'],
-                       'totalAmount' => $_COOKIE['totalAmount'],
+                       'totalAmount' => $fieldValue['totalAmount'],
                        );
         
-        $payment = array('CardFlag'        => $_COOKIE['CardFlag'],
-                         'Installments'    => $_COOKIE['Installments'],
-                         'Creditor'        => $_COOKIE['Creditor'],
-                         'CardType'        => $_COOKIE['CardType'],
+        $payment = array('CardFlag'        => $fieldValue['CardFlag'],
+                         'Installments'    => $fieldValue['Installments'],
+                         'Creditor'        => $fieldValue['Creditor'],
+                         'CardType'        => $fieldValue['CardType'],
                          
-                         'Authenticate'      => $_COOKIE['Authenticate'], 
-                         'AuthorizationType' => $_COOKIE['AuthorizationType'],     
-                         'AutoCapturer'      => $_COOKIE['AutoCapturer'],
+                         'Authenticate'      => $fieldValue['Authenticate'], 
+                         'AuthorizationType' => $fieldValue['AuthorizationType'],     
+                         'AutoCapturer'      => $fieldValue['AutoCapturer'],
  
-                         'tid'             => $_COOKIE['tid'],
+                         'tid'             => $fieldValue['tid'],
                          );
         
     }
@@ -105,8 +103,10 @@
         $arguments['payment']['CardExpiration'] = $_POST['card_expiration']; //yyyymm
         $arguments['payment']['CardSecCode']    = $_POST['card_code'];       //3 digits number
     }    
-    
-    /** instantiate a new Payment Object **/
+
+
+
+    /** INSTANTIATE A NEW PAYMENT OBJECT **/
     include_once('brazilcards-lib/BrazilCards.class.php');
     $Cielo = new BrazilCards($arguments);
 
@@ -125,36 +125,74 @@
      * 
      */
 
+            
     if($checkOut){
         /** Browser is still on Checkout phase **/
 
-        //these values should be saved into the database. But for the sake of this demonstration we are putting them into cookies
-        setcookie('totalAmount',     $order['totalAmount']);
-        setcookie('CardFlag',        $payment['CardFlag']);
-        setcookie('Installments',    $payment['Installments']);
-        setcookie('Creditor',        $payment['Creditor']);
-        setcookie('CardType',        $payment['CardType']);
-        setcookie('Authenticate',      $payment['Authenticate']);
-        setcookie('AuthorizationType', $payment['AuthorizationType']);
-        setcookie('AutoCapturer',      $payment['AutoCapturer']);
-
-        //request authorization
+        /** REQUEST AUTHORIZATION **/
         $Cielo->authorize();
-        
-        //save transaction id      
-        setcookie('tid',      $Cielo->response->tid);
 
     }else{
         /** Browser is returning from authentication at cielo's webservice **/
-        
+    echo '<pre>';    
+    print_r($Cielo);
         //retrieve data from database
-        $Cielo->request_data['tid']    = $_COOKIE['tid'];
+        $Cielo->request_data['tid']    = $payment['tid'];
         
-        //do a follow up on the transaction to see if it has been authorized
+         /** DO A FOLLOW UP ON THE TRANSACTION TO FIND OUT IF HAS BEEN AUTHORIZED **/
+         //we need to manually set the credentials only when it is a test enviroment because there is two sets of credentials
+         //for testing two types of merchant account
+        $Cielo->membership['filiacao'] = $fieldValue['filiacao'];
+        $Cielo->membership['chave']    = $fieldValue['chave'];
+        
+        
+        $Cielo->followUp();
+        
+	//Status code descriptions
+	$status = array(0 => 'Transaction was created',
+			1 => 'In progress',
+			2 => 'Authenticated',
+			3 => 'Not Authenticated',
+			4 => 'Authorized or still to be Captured',
+			5 => 'Not Authorized',
+			6 => 'Captured',
+			8 => 'Not Captured',
+			9 => 'Voided (Cancelada)',
+			10 => 'Being Authenticated',
+		       );
+        
+        
+        
+        
+        //
         
         
         //capturing
     }
+
+    /** these values should be saved into the database. But for the sake of this demonstration we are putting them into a cookie **/
+    $data = 'totalAmount='.        $order['totalAmount'].
+            ':CardFlag='.          $payment['CardFlag'].
+            ':Installments='.      $payment['Installments'].
+            ':Creditor='.          $payment['Creditor'].
+            ':CardType='.          $payment['CardType'].
+            ':Authenticate='.      $payment['Authenticate'].
+            ':AuthorizationType='. $payment['AuthorizationType'].
+            ':AutoCapturer='.      $payment['AutoCapturer'].
+            //webservice response data
+            ':tid='.               $Cielo->response->tid.
+            ':status='.            $Cielo->response->status.
+
+            //in a real production enviroment you wont need to save filiacao and chave into the Purchase Order table.
+            //we need to do it here because the test enviroment has two sets of credentials whereas a real merchant will have
+            //only one set of credential. Later on when doing follow ups we will need to know which set of test credential had been used
+            ':filiacao='. $Cielo->membership['filiacao'].
+            ':chave='.    $Cielo->membership['chave'];
+
+    //the cookie is going to be our database table row and the po number is gonna be the record id
+    setcookie($order['number'], $data);  
+
+
 
     echo '<pre>';    
     print_r($Cielo);

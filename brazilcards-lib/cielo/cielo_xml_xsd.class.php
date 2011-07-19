@@ -9,7 +9,7 @@
  *
  * You are required to purchase a license permission for comercial use of this code.
  *
- * @file Cielo's webservice xml request schemas 
+ * @file Xml Schemas for doing webservice requests
  * @copyright 2011 Drupalista.com.br 
  * @author Francisco Luz <franciscoferreiraluz at yahoo dot com dot au>
  * @package BrazilCards
@@ -47,7 +47,9 @@ class cielo_xml_xsd extends Cielo {
      * requisicao_tid
      * requisicao_autorizacao_portador
      * requisicao_autorizacao_tid
-     * requisicao_consulta;
+     * requisicao_captura
+     * requisicao_consulta
+     * requisicao_cancelamento
      * 
      */
     public function requisicao_transacao(){
