@@ -38,7 +38,7 @@
  *   July 2011
  */
 
-class xml_xsd extends Cielo {
+class cielo_xml_xsd extends Cielo {
 
     /**
      * Xml Schemas
