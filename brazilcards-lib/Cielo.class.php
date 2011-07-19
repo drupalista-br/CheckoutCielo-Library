@@ -69,6 +69,9 @@ class Cielo extends BrazilCards {
         //SSL Public key
         $this->ws['curl_pubKey'] = 'VeriSignClass3PublicPrimaryCertificationAuthority-G5.crt';
         
+        //validate public key for curl requests
+        $this->ws['curl_use_ssl'] = TRUE;
+        
         //Set default values for xsd envelopes
         $this->request_data = array('xsd_version'   => '1.1.0',              //cielo's xsd version
                                     'currency_code' => 986,                  //Currency code, defaulted to BRL
@@ -93,7 +96,7 @@ class Cielo extends BrazilCards {
         $this->request_data['return_url'] = $http.$domainName.$_SERVER["PHP_SELF"].'?order='.$this->order['pedido'];
         
         /** format po value **/
-        //remove decimal separators
+        //remove any dot or comman that it eventually might have
         $this->order['TotalAmount'] = str_replace(',','', $this->order['TotalAmount']);
         $this->order['TotalAmount'] = str_replace('.','', $this->order['TotalAmount']);
         
@@ -140,23 +143,49 @@ class Cielo extends BrazilCards {
     }
     
     public function followUp(){
-        
-        
+        //check if there is a tid available
+        if(empty($this->request_data['tid'])){
+            Commons::setWarning(array('follow_up', 'Could not do a follow up because request_data[\'tid\'] property is not set.'));    
+        }else{
+            self::httprequest(xml_xsd::requisicao_consulta());            
+        }
     }
 
-    public function capture($parameters){
-        Commons::setWarning(array('capture()', 'Cielo does not provide a capture method. You should instead set \'AutoCapturer\' = TRUE (this is the default) at authorize phase.'));
-        
+    public function capture(){
+        Commons::setWarning(array('capture', 'Cielo does not provide a capture method. You should instead set \'AutoCapturer\' = TRUE (this is the default) at authorize phase.'));
     }
     
-    public function capturePreAuthorize($parameters){
+    public function capturePreAuthorize($amount){
+        if(empty($amount)){
+            //capture its total
+            $this->request_data['captureAmount'] = $this->order['TotalAmount'];
+        }elseif($amount > $this->order['TotalAmount']){
+            //even when this check does not fail, the webservice still might deny it if remaining balance from previous
+            //partial captures is less than the amount of this capturing attempt.
+            
+            //throw a warning. 
+            Commons::setWarning(array('capturePreAuthorize', 'Amount to be captured can\'t be greater than the amount previously authorized.'));
+            break;
+        }else{
+            //partial capture or $amount represents 100% of the authorized amount
+            $this->request_data['captureAmount'] = $amount;
+        }
         
-        
+        //check if there is a tid available
+        if(empty($this->request_data['tid'])){
+            Commons::setWarning(array('capturePreAuthorize', 'Could not do a capturing because request_data[\'tid\'] property is not set.'));    
+        }else{
+            self::httprequest(xml_xsd::requisicao_captura());
+        }
     }
     
-    public function voidTransaction($parameters){
-        
-        
+    public function voidTransaction(){        
+        //check if there is a tid available
+        if(empty($this->request_data['tid'])){
+            Commons::setWarning(array('capturePreAuthorize', 'Could not do a voiding because request_data[\'tid\'] property is not set.'));    
+        }else{
+            self::httprequest(xml_xsd::requisicao_cancelamento());
+        }
     }
 
     
@@ -190,8 +219,6 @@ class Cielo extends BrazilCards {
                            'Authenticate'      => array('#default'  => true,
                                                         '#expected' => array('0', '1'),
                                                        ),
-                           'CardHandling'      => array('#default'  => false,
-                                                       ),
                            );
 
         foreach($checkList as $attribute => $settings){
@@ -220,7 +247,9 @@ class Cielo extends BrazilCards {
             $this->parameters['InstallmentType'] = $this->parameters['Creditor'];  //2 (merchant) or 3 (cielo)
         }
         
-        //check if card details are being collected by the merchant
+        /** check if card details are being collected by the merchant **/
+        //default
+        $this->parameters['CardHandling'] = FALSE;
         if(!empty($paymentAttributes['CardNumber'])){
             $this->parameters['CardHandling'] = true;
             
@@ -237,7 +266,7 @@ class Cielo extends BrazilCards {
         }
         
         if($this->is_test){
-            //this is a test environment so we need to define filiacao and chave values
+            /** this is a test environment so we need to define filiacao and chave values **/
             
             //default: merchant collects card details from its customers 
             $this->membership['filiacao'] = $this->ws['merchant'];
@@ -256,9 +285,9 @@ class Cielo extends BrazilCards {
     /**
      * Helper function
      *
-     * Script portion extracted from Cielo's code sample
+     * Script portion extracted from Cielo's code sample with minor modifications
      *
-     * It sends requests to the webservice
+     * It send xml requests to cielo's webservice
      */    
     private function httprequest($xsd){
         $xsd = 'mensagem='.$xsd;
@@ -270,7 +299,7 @@ class Cielo extends BrazilCards {
 
         //  CURLOPT_SSL_VERIFYPEER
         //  verifica a validade do certificado
-        curl_setopt($sessao_curl, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($sessao_curl, CURLOPT_SSL_VERIFYPEER, $this->ws['curl_use_ssl']);
         //  CURLOPPT_SSL_VERIFYHOST
         //  verifica se a identidade do servidor bate com aquela informada no certificado
         curl_setopt($sessao_curl, CURLOPT_SSL_VERIFYHOST, 2);
@@ -304,7 +333,6 @@ class Cielo extends BrazilCards {
             $this->response = simplexml_load_string($resultado);
             
         }else{
-
             Commons::setWarning(array('curl_error', curl_error($sessao_curl)));
         }
     }

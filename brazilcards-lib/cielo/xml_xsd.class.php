@@ -92,12 +92,30 @@ class xml_xsd extends Cielo {
                     "</requisicao-autorizacao-tid>";
     }
     
+    
+    public function requisicao_captura(){
+        return "<?xml version='1.0' encoding='ISO-8859-1'?>".
+                    "<requisicao-captura id='".md5(date("YmdHisu"))."' versao='".$this->request_data['xsd_version']."'>".
+                            "<tid>".$this->request_data['tid']."</tid>".
+                            self::dados_ec().
+                            "<valor>".$this->request_data['captureAmount']."</valor>".
+                    "</requisicao-captura>";
+    }    
+    
     public function requisicao_consulta(){
         return "<?xml version='1.0' encoding='ISO-8859-1'?>".
                     "<requisicao-consulta id='".md5(date("YmdHisu"))."' versao='".$this->request_data['xsd_version']."'>".
                             "<tid>".$this->request_data['tid']."</tid>".
                             self::dados_ec().
                     "</requisicao-consulta>";
+    }
+    
+    public function requisicao_cancelamento(){
+        return "<?xml version='1.0' encoding='ISO-8859-1'?>".
+                    "<requisicao-cancelamento id='".md5(date("YmdHisu"))."' versao='".$this->request_data['xsd_version']."'>".
+                            "<tid>".$this->request_data['tid']."</tid>".
+                            self::dados_ec().
+                    "</requisicao-cancelamento>";
     }
 
     /**

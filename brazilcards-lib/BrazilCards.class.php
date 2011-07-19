@@ -86,9 +86,14 @@ class BrazilCards extends Commons {
         $operator::authorize($parameters);
     }
  
-    public function capture(){
-        
-        
+    public function capture($parameters = NULL){
+        $operator = $this->operator;       
+        $operator::capture($parameters);
+    }
+    
+    public function capturePreAuthorize($parameters = NULL){
+        $operator = $this->operator;       
+        $operator::capturePreAuthorize($parameters);
     } 
     
 }
