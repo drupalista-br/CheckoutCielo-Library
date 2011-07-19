@@ -124,8 +124,7 @@
      *   ie. $Cielo->request_data['return_url'] = 'http://www.myStoreDomain.com/my_path/my_return_script.php';
      * 
      */
-
-            
+ 
     if($checkOut){
         /** Browser is still on Checkout phase **/
 
@@ -134,43 +133,40 @@
 
     }else{
         /** Browser is returning from authentication at cielo's webservice **/
-    echo '<pre>';    
-    print_r($Cielo);
-        //retrieve data from database
-        $Cielo->request_data['tid']    = $payment['tid'];
+
+        //retrieve po data from database
+        $Cielo->request_data['tid']    = $fieldValue['tid'];
         
-         /** DO A FOLLOW UP ON THE TRANSACTION TO FIND OUT IF HAS BEEN AUTHORIZED **/
+         /** DO A FOLLOW UP ON THE TRANSACTION TO FIND OUT IF IT HAS BEEN AUTHORIZED **/
          //we need to manually set the credentials only when it is a test enviroment because there is two sets of credentials
-         //for testing two types of merchant account
+         //for testing two different configurations of merchant account, so we make sure we use the same credentials that was
+         //used when the transaction that we are now following up was created
         $Cielo->membership['filiacao'] = $fieldValue['filiacao'];
         $Cielo->membership['chave']    = $fieldValue['chave'];
         
-        
+        /** REQUEST A FOLLOW UP ON THE TRANSACTION TO FIND OUT ABOUT ITS STATUS **/
         $Cielo->followUp();
         
-	//Status code descriptions
-	$status = array(0 => 'Transaction was created',
-			1 => 'In progress',
-			2 => 'Authenticated',
-			3 => 'Not Authenticated',
-			4 => 'Authorized or still to be Captured',
-			5 => 'Not Authorized',
-			6 => 'Captured',
-			8 => 'Not Captured',
-			9 => 'Voided (Cancelada)',
-			10 => 'Being Authenticated',
-		       );
-        
-        
-        
-        
-        //
-        
-        
-        //capturing
+	/**
+         * Status code descriptions are
+         * 
+	 * 0 => 'Transaction was created'
+	 * 1 => 'In progress'
+	 * 2 => 'Authenticated'
+	 * 3 => 'Not Authenticated'
+	 * 4 => 'Authorized or still to be Captured'
+	 * 5 => 'Not Authorized'
+	 * 6 => 'Captured'
+	 * 8 => 'Not Captured'
+	 * 9 => 'Voided (Cancelada)'
+	 * 10 => 'Being Authenticated'
+	 *
+	 * Based on the current status at $Cielo->response->status; the application should decide what to next.
+	 *
+         */
     }
 
-    /** these values should be saved into the database. But for the sake of this demonstration we are putting them into a cookie **/
+    /** SAVE PO - these values should be saved into the database. But for the sake of this demonstration we are putting them into a cookie **/
     $data = 'totalAmount='.        $order['totalAmount'].
             ':CardFlag='.          $payment['CardFlag'].
             ':Installments='.      $payment['Installments'].
@@ -208,17 +204,6 @@ Código de segurança: qualquer
 Valor do pedido: para simular transação autorizada, use qualquer valor em que os dois
 últimos dígitos sejam zeros. Do contrário, toda autorização será negada.
 
-Status Nome
-0 Criada
-1 Em andamento
-2 Autenticada
-3 Não autenticada
-4 Autorizada ou pendente de captura
-5 Não autorizada
-6 Capturada
-8 Não capturada
-9 Cancelada
-10 Em Autenticação
 
 */
 
