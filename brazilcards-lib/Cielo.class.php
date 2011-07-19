@@ -37,7 +37,7 @@
  *   Francisco Luz
  *   July 2011
  */
-include_once('cielo/xml_xsd.class.php');
+include_once('cielo/cielo_xml_xsd.class.php');
 
 class Cielo extends BrazilCards {
     
@@ -113,7 +113,7 @@ class Cielo extends BrazilCards {
             
             if($this->parameters['Authenticate']){
                 //request a new transaction
-                self::httprequest(xml_xsd::requisicao_transacao());
+                self::httprequest(cielo_xml_xsd::requisicao_transacao());
 
                 //redirect browser to cielo for authenticating the card holder
                 header('Location: '.$this->response->{'url-autenticacao'});
@@ -124,18 +124,18 @@ class Cielo extends BrazilCards {
                 //card holder wont be authenticated
                 
                 //request a new transaction
-                self::httprequest(xml_xsd::requisicao_tid());
+                self::httprequest(cielo_xml_xsd::requisicao_tid());
                 
                 //request authorization
                 $this->request_data['tid'] = $this->response->tid;
-                self::httprequest(xml_xsd::requisicao_autorizacao_portador());
+                self::httprequest(cielo_xml_xsd::requisicao_autorizacao_portador());
             }
 
         }else{
             //customers will be asked to provider their card details at cielo's website
             
             //request a new transaction
-            self::httprequest(xml_xsd::requisicao_transacao());
+            self::httprequest(cielo_xml_xsd::requisicao_transacao());
 
             //redirect browser to cielo for collecting card details and authentication
             header( 'Location: '.$this->response->{'url-autenticacao'});
@@ -147,7 +147,7 @@ class Cielo extends BrazilCards {
         if(empty($this->request_data['tid'])){
             Commons::setWarning(array('follow_up', 'Could not do a follow up because request_data[\'tid\'] property is not set.'));    
         }else{
-            self::httprequest(xml_xsd::requisicao_consulta());            
+            self::httprequest(cielo_xml_xsd::requisicao_consulta());            
         }
     }
 
@@ -175,7 +175,7 @@ class Cielo extends BrazilCards {
         if(empty($this->request_data['tid'])){
             Commons::setWarning(array('capturePreAuthorize', 'Could not do a capturing because request_data[\'tid\'] property is not set.'));    
         }else{
-            self::httprequest(xml_xsd::requisicao_captura());
+            self::httprequest(cielo_xml_xsd::requisicao_captura());
         }
     }
     
@@ -184,7 +184,7 @@ class Cielo extends BrazilCards {
         if(empty($this->request_data['tid'])){
             Commons::setWarning(array('capturePreAuthorize', 'Could not do a voiding because request_data[\'tid\'] property is not set.'));    
         }else{
-            self::httprequest(xml_xsd::requisicao_cancelamento());
+            self::httprequest(cielo_xml_xsd::requisicao_cancelamento());
         }
     }
 
@@ -278,7 +278,7 @@ class Cielo extends BrazilCards {
                 $this->membership['chave']    = $this->ws['cielo_chave'];
             }
         }else{
-            xml_xsd::validateServer();
+            cielo_xml_xsd::validateServer();
         }
     }
     
