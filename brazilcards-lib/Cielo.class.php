@@ -39,9 +39,10 @@
  */
 include_once('cielo/cielo_xml_xsd.class.php');
 
-class Cielo extends BrazilCards {
+class Cielo extends BrazilCards{
     
-    public $request_data;
+    //holds the xml object instantiation
+    private $envelope;
     
     public function setUp(){
         
@@ -72,14 +73,18 @@ class Cielo extends BrazilCards {
         //validate public key for curl requests
         $this->ws['curl_use_ssl'] = TRUE;
         
+        
+        //extends the envelope object
+        $this->envelope = new cielo_xml_xsd();
+        
         //Set default values for xsd envelopes
-        $this->request_data = array('xsd_version'   => '1.1.0',              //cielo's xsd version
-                                    'currency_code' => 986,                  //Currency code, defaulted to BRL
-                                    'language_code' => 'PT',                 //language code
-                                    'date_time'     => date("Y-m-d\TH:i:s"), //date and time
-                                    
-                                    'tid'           => '',
-                                   );
+        $this->envelope->request_data = array('xsd_version'   => '1.1.0',              //cielo's xsd version
+                                              'currency_code' => 986,                  //Currency code, defaulted to BRL
+                                              'language_code' => 'PT',                 //language code
+                                              'date_time'     => date("Y-m-d\TH:i:s"), //date and time
+                                            
+                                               'tid'           => '',
+                                              );
         
         /** url for returning from cielo after authentication has taken place **/
         $http = 'http://';
@@ -93,7 +98,7 @@ class Cielo extends BrazilCards {
             $domainName .= ':'.$_SERVER["SERVER_PORT"];
         }
         //assemble returning url
-        $this->request_data['return_url'] = $http.$domainName.$_SERVER["PHP_SELF"].'?order='.$this->order['pedido'];
+        $this->envelope->request_data['return_url'] = $http.$domainName.$_SERVER["PHP_SELF"].'?order='.$this->order['pedido'];
         
         /** format po value **/
         //remove any dot or comman that it eventually might have
@@ -103,6 +108,10 @@ class Cielo extends BrazilCards {
         //set up payment attributes
         self::setPaymentAttributes();
         
+        
+        //construct envelope object
+        $this->envelope->setObject($this);
+
      }
      
      public function authorize(){
@@ -113,7 +122,7 @@ class Cielo extends BrazilCards {
             
             if($this->parameters['Authenticate']){
                 //request a new transaction
-                self::httprequest(cielo_xml_xsd::requisicao_transacao());
+                self::httprequest($this->envelope->requisicao_transacao());
 
                 //redirect browser to cielo for authenticating the card holder
                 header('Location: '.$this->response->{'url-autenticacao'});
@@ -124,18 +133,18 @@ class Cielo extends BrazilCards {
                 //card holder wont be authenticated
                 
                 //request a new transaction
-                self::httprequest(cielo_xml_xsd::requisicao_tid());
+                self::httprequest($this->envelope->requisicao_tid());
                 
                 //request authorization
-                $this->request_data['tid'] = $this->response->tid;
-                self::httprequest(cielo_xml_xsd::requisicao_autorizacao_portador());
+                $this->envelope->request_data['tid'] = $this->response->tid;
+                self::httprequest($this->envelope->requisicao_autorizacao_portador());
             }
 
         }else{
             //customers will be asked to provider their card details at cielo's website
             
             //request a new transaction
-            self::httprequest(cielo_xml_xsd::requisicao_transacao());
+            self::httprequest($this->envelope->requisicao_transacao());
 
             //redirect browser to cielo for collecting card details and authentication
             header( 'Location: '.$this->response->{'url-autenticacao'});
@@ -144,47 +153,47 @@ class Cielo extends BrazilCards {
     
     public function followUp(){
         //check if there is a tid available
-        if(empty($this->request_data['tid'])){
-            Commons::setWarning(array('follow_up', 'Could not do a follow up because request_data[\'tid\'] property is not set.'));    
+        if(empty($this->envelope->request_data['tid'])){
+            $this->setWarning(array('follow_up', 'Could not do a follow up because request_data[\'tid\'] property is not set.'));    
         }else{
-            self::httprequest(cielo_xml_xsd::requisicao_consulta());            
+            self::httprequest($this->envelope->requisicao_consulta());            
         }
     }
 
     public function capture(){
-        Commons::setWarning(array('capture', 'Cielo does not provide a capture method. You should instead set \'AutoCapturer\' = TRUE (this is the default) at authorize phase.'));
+        $this->setWarning(array('capture', 'Cielo does not provide a capture method. You should instead set \'AutoCapturer\' = TRUE (this is the default) at authorize phase.'));
     }
     
-    public function capturePreAuthorize($amount){
+    public function capturePreAuthorize($amount = ''){
         if(empty($amount)){
             //capture its total
-            $this->request_data['captureAmount'] = $this->order['TotalAmount'];
+            $this->envelope->request_data['captureAmount'] = $this->order['TotalAmount'];
         }elseif($amount > $this->order['TotalAmount']){
             //even when this check does not fail, the webservice still might deny it if remaining balance from previous
             //partial captures is less than the amount of this capturing attempt.
             
             //throw a warning. 
-            Commons::setWarning(array('capturePreAuthorize', 'Amount to be captured can\'t be greater than the amount previously authorized.'));
+            $this->setWarning(array('capturePreAuthorize', 'Amount to be captured can\'t be greater than the amount previously authorized.'));
             break;
         }else{
             //partial capture or $amount represents 100% of the authorized amount
-            $this->request_data['captureAmount'] = $amount;
+            $this->envelope->request_data['captureAmount'] = $amount;
         }
         
         //check if there is a tid available
-        if(empty($this->request_data['tid'])){
-            Commons::setWarning(array('capturePreAuthorize', 'Could not do a capturing because request_data[\'tid\'] property is not set.'));    
+        if(empty($this->envelope->request_data['tid'])){
+            $this->setWarning(array('capturePreAuthorize', 'Could not do a capturing because request_data[\'tid\'] property is not set.'));    
         }else{
-            self::httprequest(cielo_xml_xsd::requisicao_captura());
+            self::httprequest($this->envelope->requisicao_captura());
         }
     }
     
     public function voidTransaction(){        
         //check if there is a tid available
-        if(empty($this->request_data['tid'])){
-            Commons::setWarning(array('capturePreAuthorize', 'Could not do a voiding because request_data[\'tid\'] property is not set.'));    
+        if(empty($this->envelope->request_data['tid'])){
+            $this->setWarning(array('capturePreAuthorize', 'Could not do a voiding because request_data[\'tid\'] property is not set.'));    
         }else{
-            self::httprequest(cielo_xml_xsd::requisicao_cancelamento());
+            self::httprequest($this->envelope->requisicao_cancelamento());
         }
     }
 
@@ -248,20 +257,19 @@ class Cielo extends BrazilCards {
         }
         
         /** check if card details are being collected by the merchant **/
-        //default
-        $this->parameters['CardHandling'] = FALSE;
+        $this->parameters['CardHandling'] = FALSE; //default
         if(!empty($paymentAttributes['CardNumber'])){
             $this->parameters['CardHandling'] = true;
             
             //TODO: validate card details
             
             //set default indicator
-            $this->request_data['indicador'] = 1;
+            $this->envelope->request_data['indicador'] = 1;
      
             if(empty($paymentAttributes['CardSecCode'])){
-                $this->request_data['indicador'] = 0;
+                $this->envelope->request_data['indicador'] = 0;
             }elseif($paymentAttributes['CardFlag'] == 'mastercard'){
-                $this->request_data['indicador'] = 1;
+                $this->envelope->request_data['indicador'] = 1;
             }
         }
         
@@ -278,7 +286,7 @@ class Cielo extends BrazilCards {
                 $this->membership['chave']    = $this->ws['cielo_chave'];
             }
         }else{
-            cielo_xml_xsd::validateServer();
+            $this->envelope->validateServer();
         }
     }
     
@@ -287,7 +295,7 @@ class Cielo extends BrazilCards {
      *
      * Script portion extracted from Cielo's code sample with minor modifications
      *
-     * It send xml requests to cielo's webservice
+     * It sends xml requests to cielo's webservice
      */    
     private function httprequest($xsd){
         $xsd = 'mensagem='.$xsd;
@@ -333,7 +341,7 @@ class Cielo extends BrazilCards {
             $this->response = simplexml_load_string($resultado);
             
         }else{
-            Commons::setWarning(array('curl_error', curl_error($sessao_curl)));
+            $this->setWarning(array('curl_error', curl_error($sessao_curl)));
         }
     }
 }

@@ -37,12 +37,18 @@
  *   Francisco Luz
  *   July 2011
  */
-include_once('Commons/Commons.class.php');
 
-class BrazilCards extends Commons {
-    //Defines which operators child class will handle transactions
-    //Defaut == 'RedeCard'
-    public $operator = 'RedeCard';
+function __autoload($className) {
+   include_once($className.'.class.php'); 
+    
+}
+
+abstract class BrazilCards {
+    //warnings
+    public $warnings = array();
+    
+    //Card's operator name
+    public $operator;
     
     public $membership = array();
     
@@ -73,34 +79,26 @@ class BrazilCards extends Commons {
             //assign values to properties
             $this->$argument = $value;
         }
+        //define card's operator name
+        $this->operator = get_class($this);
         
-        //include operator's class
-        $operator = $this->operator;
-        include_once($operator.'.class.php');
-        $operator::setUp();
+        $this->setUp();
+    }
+    
+    /**
+     * Set Warnings
+     * 
+     * @param $message == (array) Key holds the field name and Value holds the Message to be set or unset
+     * @param $action  == 1 sets, 0 unsets
+     * 
+     */    
+    public function setWarning($message, $action = 1){
+        if($action){
+            $this->warnings[$message[0]] = $message[1];
+        }else{
+            unset($this->warnings[$message[0]]);
+        }
+    } 
 
-    }
-    
-    public function authorize($parameters = NULL){
-        $operator = $this->operator;       
-        $operator::authorize($parameters);
-    }
- 
-    public function capture($parameters = NULL){
-        $operator = $this->operator;       
-        $operator::capture($parameters);
-    }
-    
-    public function capturePreAuthorize($parameters = NULL){
-        $operator = $this->operator;       
-        $operator::capturePreAuthorize($parameters);
-    }
-    
-    public function followUp($parameters = NULL){
-        $operator = $this->operator;       
-        $operator::followUp($parameters);
-    }
-    
-    
 }
 ?>

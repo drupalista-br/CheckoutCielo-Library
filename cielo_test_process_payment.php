@@ -65,8 +65,7 @@
     /**
      * Arguments for instantiating a payment Object
      */
-    $arguments = array('operator' => 'Cielo',  //RedeCard is default
-                       'is_test'  => TRUE,     //Default is FALSE. When set to TRUE then the library will perform on cielo's webservice sandBox
+    $arguments = array('is_test'  => TRUE,     //Default is FALSE. When set to TRUE then the library will perform on cielo's webservice sandBox
                        
                         /** These are the credentials for the production enviroment. They are ignored when 'is_test' == TRUE **/
                        'membership' => array('filiacao'     => 1006993068,     //Merchant's membership number at the operator
@@ -104,11 +103,9 @@
         $arguments['payment']['CardSecCode']    = $_POST['card_code'];       //3 digits number
     }    
 
-
-
     /** INSTANTIATE A NEW PAYMENT OBJECT **/
     include_once('brazilcards-lib/BrazilCards.class.php');
-    $Cielo = new BrazilCards($arguments);
+    $Cielo = new Cielo($arguments);
 
     /**
      * When a redirection to cielo for card handling has to be done then the library sets a default url value for returning
@@ -161,7 +158,7 @@
 	 * 9 => 'Voided (Cancelada)'
 	 * 10 => 'Being Authenticated'
 	 *
-	 * Based on the current status at $Cielo->response->status; the application should decide what to next.
+	 * The application should decide what to next based on the current status at $Cielo->response->status; .
 	 *
          */
     }
@@ -179,7 +176,7 @@
             ':tid='.               $Cielo->response->tid.
             ':status='.            $Cielo->response->status.
 
-            //in a real production enviroment you wont need to save filiacao and chave into the Purchase Order table.
+            //in a real production enviroment you wont need to save filiacao and chave to the Purchase Order table.
             //we need to do it here because the test enviroment has two sets of credentials whereas a real merchant will have
             //only one set of credential. Later on when doing follow ups we will need to know which set of test credential had been used
             ':filiacao='. $Cielo->membership['filiacao'].

