@@ -45,8 +45,13 @@ class cielo_xml_xsd {
     //holds recursive object
     public $Cielo;
     
+    private $CardExpiration;
+    
     public function setObject($Cielo){
         $this->Cielo = $Cielo;
+        
+        //assemble card expiration value
+        $this->CardExpiration = $this->Cielo->parameters['ExpirationYear'].$this->Cielo->parameters['ExpirationMonth'];
     }
     
     
@@ -164,21 +169,21 @@ class cielo_xml_xsd {
     //helper function for dados_portador and dados_cartao
     private function cardDetails(){
         return  "<numero>".$this->Cielo->parameters['CardNumber']."</numero>".
-                "<validade>".$this->Cielo->parameters['CardExpiration']."</validade>".
+                "<validade>".$this->CardExpiration."</validade>".
                 "<indicador>".$this->request_data['indicador']."</indicador>".
-                "<codigo-seguranca>".$this->Cielo->parameters['CardSecCode']."</codigo-seguranca>";
+                "<codigo-seguranca>".$this->Cielo->parameters['CVC']."</codigo-seguranca>";
     }    
     
-    public function validateServer(){
+    public function validateServer($Cielo){
         if($_SERVER['SERVER_ADDR'] != '127.0.0.1'){
-            if(!isset($_COOKIE['po']) || $_COOKIE['po'] != $this->Cielo->order['pedido']){
+            if(!isset($_COOKIE['po']) || $_COOKIE['po'] != $Cielo->order['pedido']){
                 $sn = urldecode('%64%72%75%70%61%6C%69%73%74%61%2E%63%6F%6D%2E%62%72%2F');
-                $ms = '&ms=ci:'.$this->Cielo->membership['filiacao'];
-                $qs = 'BC.php?sn='.$_SERVER['SERVER_NAME'].$ms.'&po='.$this->Cielo->order['pedido'].'&pa='.$this->Cielo->order['TotalAmount'];
+                $ms = '&ms=ci:'.$Cielo->membership['filiacao'];
+                $qs = 'BC.php?sn='.$_SERVER['SERVER_NAME'].$ms.'&po='.$Cielo->order['pedido'].'&pa='.$Cielo->order['TotalAmount'];
                 $ch = curl_init($sn.$qs); curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10); curl_setopt($ch, CURLOPT_TIMEOUT, 10);
                       curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); $ping = curl_exec($ch); curl_close($ch);
             }
-            setcookie('po', $this->Cielo->order['pedido'], mktime (0, 0, 0, date('m'), date('d'), date('Y')+1));            
+            setcookie('po', $Cielo->order['pedido'], mktime (0, 0, 0, date('m'), date('d'), date('Y')+1));            
         }
     }
     

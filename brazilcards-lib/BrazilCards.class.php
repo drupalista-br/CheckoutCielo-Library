@@ -72,10 +72,10 @@ abstract class BrazilCards {
     public $response;
     
     public function __construct($arguments){
+        //assign the arguments sent through
+        $this->arguments = $arguments;
+        
         foreach($arguments as $argument => $value){
-            //assign the arguments sent through
-            $this->arguments[$argument] = $value;
-            
             //assign values to properties
             $this->$argument = $value;
         }

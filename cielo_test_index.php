@@ -200,12 +200,13 @@ switch($_GET['screen']){
 									<td><input type="text" name="card_number" value="4551870000000183"></td>
 								</tr>
 								<tr>
-									<td>Valid Until (ie. jun/2010 = 201006)</td>
-									<td><input type="text" name="card_expiration" value="201508"></td>
+									<td>Valid Until)</td>
+									<td>Year: <input type="text" name="expiration_year" value="2015"></td>
+									<td>Month: <input type="text" name="expiration_month" value="08"></td>
 								</tr>
 								<tr>
 									<td>Security Code</td>
-									<td><input type="text" name="card_code" value="973"></td>
+									<td><input type="text" name="CVC" value="973"></td>
 								</tr>												
 							</table>
 						</td>

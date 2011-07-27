@@ -98,9 +98,10 @@
     //check if card details were collected at merchant's store
     if(isset($_POST['card_number'])){
         //Again, do not save them into the database
-        $arguments['payment']['CardNumber']     = $_POST['card_number'];     //see list of card numbers that can be used in the sandBox enviroment at the end of this file
-        $arguments['payment']['CardExpiration'] = $_POST['card_expiration']; //yyyymm
-        $arguments['payment']['CardSecCode']    = $_POST['card_code'];       //3 digits number
+        $arguments['payment']['CardNumber']      = $_POST['card_number'];     //see list of card numbers that can be used in the sandBox enviroment at the end of this file
+        $arguments['payment']['ExpirationYear']  = $_POST['expiration_year']; //yyyy
+        $arguments['payment']['ExpirationMonth'] = $_POST['expiration_month']; //mm
+        $arguments['payment']['CVC']             = $_POST['CVC'];              //3 digits number
     }    
 
     /** INSTANTIATE A NEW PAYMENT OBJECT **/

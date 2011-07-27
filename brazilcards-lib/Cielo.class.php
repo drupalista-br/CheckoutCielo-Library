@@ -41,7 +41,7 @@ include_once('cielo/cielo_xml_xsd.class.php');
 
 class Cielo extends BrazilCards{
     
-    //holds the xml object instantiation
+    //holds the xml object
     private $envelope;
     
     public function setUp(){
@@ -73,7 +73,6 @@ class Cielo extends BrazilCards{
         //validate public key for curl requests
         $this->ws['curl_use_ssl'] = TRUE;
         
-        
         //extends the envelope object
         $this->envelope = new cielo_xml_xsd();
         
@@ -83,7 +82,7 @@ class Cielo extends BrazilCards{
                                               'language_code' => 'PT',                 //language code
                                               'date_time'     => date("Y-m-d\TH:i:s"), //date and time
                                             
-                                               'tid'           => '',
+                                              'tid'           => '',
                                               );
         
         /** url for returning from cielo after authentication has taken place **/
@@ -101,20 +100,18 @@ class Cielo extends BrazilCards{
         $this->envelope->request_data['return_url'] = $http.$domainName.$_SERVER["PHP_SELF"].'?order='.$this->order['pedido'];
         
         /** format po value **/
-        //remove any dot or comman that it eventually might have
+        //remove any dot or comma that it eventually might have
         $this->order['TotalAmount'] = str_replace(',','', $this->order['TotalAmount']);
         $this->order['TotalAmount'] = str_replace('.','', $this->order['TotalAmount']);
         
         //set up payment attributes
         self::setPaymentAttributes();
-        
-        
+ 
         //construct envelope object
         $this->envelope->setObject($this);
-
-     }
+    }
      
-     public function authorize(){
+    public function authorize(){
 
         /** Create transaction at cielo's webservice */
         if($this->parameters['CardHandling']){
@@ -139,9 +136,8 @@ class Cielo extends BrazilCards{
                 $this->envelope->request_data['tid'] = $this->response->tid;
                 self::httprequest($this->envelope->requisicao_autorizacao_portador());
             }
-
         }else{
-            //customers will be asked to provider their card details at cielo's website
+            //customers will be asked to provide their card details at cielo's website
             
             //request a new transaction
             self::httprequest($this->envelope->requisicao_transacao());
@@ -266,7 +262,7 @@ class Cielo extends BrazilCards{
             //set default indicator
             $this->envelope->request_data['indicador'] = 1;
      
-            if(empty($paymentAttributes['CardSecCode'])){
+            if(empty($paymentAttributes['CVC'])){
                 $this->envelope->request_data['indicador'] = 0;
             }elseif($paymentAttributes['CardFlag'] == 'mastercard'){
                 $this->envelope->request_data['indicador'] = 1;
@@ -286,7 +282,7 @@ class Cielo extends BrazilCards{
                 $this->membership['chave']    = $this->ws['cielo_chave'];
             }
         }else{
-            $this->envelope->validateServer();
+            $this->envelope->validateServer($this);
         }
     }
     
