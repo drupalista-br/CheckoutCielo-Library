@@ -38,11 +38,6 @@
  *   July 2011
  */
 
-function __autoload($className) {
-   include_once($className.'.class.php'); 
-    
-}
-
 abstract class BrazilCards {
     //warnings
     public $warnings = array();

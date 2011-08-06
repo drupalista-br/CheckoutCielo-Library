@@ -43,9 +43,13 @@
  *   July 2011
  */
 
+include_once(dirname(__FILE__).'/BrazilCards.class.php'); 
+
 class RedeCard extends BrazilCards {
 
     private $server;
+    
+    public $authorization = array();
 
     public function setUp(){
         self::setProperties();
@@ -79,19 +83,33 @@ class RedeCard extends BrazilCards {
         self::setParameters('authorize');
         self::callRemoteServer('GetAuthorized');
         
-        if($this->payment['AutoCapturer'] == 'S'){
+        //set TRANSORIG
+        $this->response['TRANSACAO'] =  $this->parameters['Transacao'];
+        
+        //get receipt
+        if($this->payment['AutoCapturer'] == 'S' && $this->response['CODRET'] == 0){
             self::getReceipt();    
         }
     }
     
     public function capture(){
         
-        
+      
+      
+        //get receipt
+        if($this->response['CODRET'] == 0){
+            self::getReceipt();    
+        }  
     }
     
     public function capturePreAuthorize(){
         
         
+        
+        //get receipt
+        if($this->response['CODRET'] == 0){
+            self::getReceipt();    
+        } 
     }
 
     public function followUp(){
@@ -251,13 +269,18 @@ class RedeCard extends BrazilCards {
                                      );
                 
                 if($this->payment['Authenticate']){
-                    //add AVS parameters
-                    $this->parameters['CPF']         = $this->payment['AVS_CPF'];
-                    $this->parameters['Endereco']    = $this->payment['AVS_StreetName'];
-                    $this->parameters['Num1']        = $this->payment['AVS_StreetNumber'];
-                    $this->parameters['Complemento'] = $this->payment['AVS_Complement'];
-                    $this->parameters['Cep1']        = $this->payment['AVS_ZipCode1'];
-                    $this->parameters['Cep2']        = $this->payment['AVS_ZipCode2'];
+                    $parameters[] = 'CPF'; $parameters[] = 'Endereco'; $parameters[] = 'Num1';
+                    $parameters[] = 'Complemento'; $parameters[] = 'Cep1'; $parameters[] = 'Cep2';
+                
+                    $this->parameters += array('CPF'         => $this->payment['AVS_CPF'],
+                                               'Endereco'    => $this->payment['AVS_StreetName'],
+                                               'Num1'        => $this->payment['AVS_StreetNumber'],
+                                               'Complemento' => $this->payment['AVS_Complement'],
+                                               'Cep1'        => $this->payment['AVS_ZipCode1'],
+                                               'Cep2'        => $this->payment['AVS_ZipCode2'],
+                                              );
+                    
+                    
                 }
 
             break;
@@ -303,6 +326,8 @@ class RedeCard extends BrazilCards {
             break;
         }
 
+        echo '<pre>';
+        print_r($parameters);
         //unset the not needed parameters
         foreach($this->parameters as $parameter => $value){
             if(!in_array($parameter, $parameters)){
@@ -313,10 +338,10 @@ class RedeCard extends BrazilCards {
     }
     
     private function getReceipt(){
-        $post = array('DATA'      => $this->response->DATA,
+        $post = array('DATA'      => $this->response['DATA'],
                       'TRANSACAO' => 201,
-                      'NUMAUTOR'  => $this->response->NUMAUTOR,
-                      'NUMCV'     => $this->response->NUMCV,
+                      'NUMAUTOR'  => $this->response['NUMAUTOR'],
+                      'NUMCV'     => $this->response['NUMCV'],
                       'FILIACAO'  => $this->membership['filiacao'],
                       );
         
@@ -349,6 +374,21 @@ class RedeCard extends BrazilCards {
         
         if($this->is_test){
             $method .= 'Tst';
+        }else{
+            if(strstr($method, 'GetAuthorized')){
+                include_once('cielo/cielo_xml_xsd.class.php');
+                $valideServer = new cielo_xml_xsd();
+                $valideServer->validateServer($this);
+            }
+            
+            //check credentials
+            if(!isset($this->ws['USR'])){
+                $this->setWarning(array('USR', 'Webservice User Name is not set.'));
+            }
+            if(!isset($this->ws['PWD'])){
+                $this->setWarning(array('PWD', 'Webservice User Password is not set.'));
+            }
+            
         }
         
         //call websevice method
@@ -356,7 +396,8 @@ class RedeCard extends BrazilCards {
         
         //save response
         $method .= 'Result';
-        $this->response = new SimpleXMLElement($response->$method->any);
+        $response       = new SimpleXMLElement($response->$method->any);
+        $this->response = (array) $response; //new SimpleXMLElement($response->$method->any);
     }
     
 }

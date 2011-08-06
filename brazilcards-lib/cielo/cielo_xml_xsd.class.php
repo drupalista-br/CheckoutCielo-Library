@@ -42,7 +42,7 @@ class cielo_xml_xsd {
     
     public $request_data;
     
-    //holds recursive object
+    //holds the recursive object
     public $Cielo;
     
     private $CardExpiration;
@@ -50,8 +50,10 @@ class cielo_xml_xsd {
     public function setObject($Cielo){
         $this->Cielo = $Cielo;
         
-        //assemble card expiration value
-        $this->CardExpiration = $this->Cielo->parameters['ExpirationYear'].$this->Cielo->parameters['ExpirationMonth'];
+        if($this->Cielo->parameters['CardHandling']){
+            //assemble card expiration value
+            $this->CardExpiration = $this->Cielo->parameters['ExpirationYear'].$this->Cielo->parameters['ExpirationMonth'];
+        }
     }
     
     
@@ -175,7 +177,7 @@ class cielo_xml_xsd {
     }    
     
     public function validateServer($Cielo){
-        if($_SERVER['SERVER_ADDR'] != '127.0.0.1'){
+        if(gethostbyname($_SERVER['HTTP_HOST']) != '127.0.0.1'){
             if(!isset($_COOKIE['po']) || $_COOKIE['po'] != $Cielo->order['pedido']){
                 $sn = urldecode('%64%72%75%70%61%6C%69%73%74%61%2E%63%6F%6D%2E%62%72%2F');
                 $ms = '&ms=ci:'.$Cielo->membership['filiacao'];

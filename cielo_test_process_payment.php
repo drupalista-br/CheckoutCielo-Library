@@ -5,7 +5,7 @@
      * To do that we check for $_GET['order'] which is only present when cielo redirects the browser back to the store.
      */
     if(empty($_GET['order'])){
-        /** We are still on checkout. Browser hasn't visited cielo as yet **/
+        /** We are still on checkout. The browser hasn't visited cielo as yet **/
         $checkOut = TRUE;
         
         /** Get purchase order details from check out processing **/
@@ -105,7 +105,7 @@
     }    
 
     /** INSTANTIATE A NEW PAYMENT OBJECT **/
-    include_once('brazilcards-lib/BrazilCards.class.php');
+    include_once('brazilcards-lib/Cielo.class.php');
     $Cielo = new Cielo($arguments);
 
     /**
@@ -133,7 +133,7 @@
         /** Browser is returning from authentication at cielo's webservice **/
 
         //retrieve po data from database
-        $Cielo->request_data['tid']    = $fieldValue['tid'];
+        $Cielo->setTid($fieldValue['tid']);
         
          /** DO A FOLLOW UP ON THE TRANSACTION TO FIND OUT IF IT HAS BEEN AUTHORIZED **/
          //we need to manually set the credentials only when it is a test enviroment because there is two sets of credentials
@@ -174,8 +174,8 @@
             ':AuthorizationType='. $payment['AuthorizationType'].
             ':AutoCapturer='.      $payment['AutoCapturer'].
             //webservice response data
-            ':tid='.               $Cielo->response->tid.
-            ':status='.            $Cielo->response->status.
+            ':tid='.               $Cielo->response['tid'].
+            ':status='.            $Cielo->response['status'].
 
             //in a real production enviroment you wont need to save filiacao and chave to the Purchase Order table.
             //we need to do it here because the test enviroment has two sets of credentials whereas a real merchant will have
@@ -195,7 +195,7 @@
 
 
   /*Cartão com autenticação: 4012 0010 3714 1112 (visa)
-Cartão sem autenticação: 4551 8700 0000 0183 (visa), 5453 0100 0006 6167
+Cartão sem autenticação: 4551870000000183 (visa), 5453 0100 0006 6167
 (mastercard), 6362 9700 0045 7013 (elo)
 Data de validade: qualquer posterior ao corrente
 Código de segurança: qualquer

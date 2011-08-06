@@ -37,7 +37,8 @@
  *   Francisco Luz
  *   July 2011
  */
-include_once('cielo/cielo_xml_xsd.class.php');
+include_once(dirname(__FILE__).'/BrazilCards.class.php'); 
+include_once(dirname(__FILE__).'/cielo/cielo_xml_xsd.class.php');
 
 class Cielo extends BrazilCards{
     
@@ -113,7 +114,7 @@ class Cielo extends BrazilCards{
      
     public function authorize(){
 
-        /** Create transaction at cielo's webservice */
+        /** Create a transaction at cielo's webservice */
         if($this->parameters['CardHandling']){
             //merchant is collecting card details and sending them through
             
@@ -122,9 +123,9 @@ class Cielo extends BrazilCards{
                 self::httprequest($this->envelope->requisicao_transacao());
 
                 //redirect browser to cielo for authenticating the card holder
-                header('Location: '.$this->response->{'url-autenticacao'});
+                header('Location: '.$this->response['url-autenticacao']);
                 
-                //once the browser is redirected back, the application will have to perform a follow up on this
+                //once the browser is redirected back from cielo, the application will have to perform a follow up on this
                 //transaction to find out if it has been authorized or not by calling $myObject->followUp().
             }else{
                 //card holder wont be authenticated
@@ -133,7 +134,7 @@ class Cielo extends BrazilCards{
                 self::httprequest($this->envelope->requisicao_tid());
                 
                 //request authorization
-                $this->envelope->request_data['tid'] = $this->response->tid;
+                $this->envelope->request_data['tid'] = $this->response['tid'];
                 self::httprequest($this->envelope->requisicao_autorizacao_portador());
             }
         }else{
@@ -142,22 +143,22 @@ class Cielo extends BrazilCards{
             //request a new transaction
             self::httprequest($this->envelope->requisicao_transacao());
 
-            //redirect browser to cielo for collecting card details and authentication
-            header( 'Location: '.$this->response->{'url-autenticacao'});
+            //redirect browser to cielo for collecting card details and doing authentication
+            header( 'Location: '.$this->response['url-autenticacao']);
         }
     }
     
     public function followUp(){
         //check if there is a tid available
         if(empty($this->envelope->request_data['tid'])){
-            $this->setWarning(array('follow_up', 'Could not do a follow up because request_data[\'tid\'] property is not set.'));    
+            $this->setWarning(array('follow_up', 'Could not do the follow up because request_data[\'tid\'] property is not set.'));    
         }else{
             self::httprequest($this->envelope->requisicao_consulta());            
         }
     }
 
     public function capture(){
-        $this->setWarning(array('capture', 'Cielo does not provide a capture method. You should instead set \'AutoCapturer\' = TRUE (this is the default) at authorize phase.'));
+        self::capturePreAuthorize();
     }
     
     public function capturePreAuthorize($amount = ''){
@@ -178,7 +179,7 @@ class Cielo extends BrazilCards{
         
         //check if there is a tid available
         if(empty($this->envelope->request_data['tid'])){
-            $this->setWarning(array('capturePreAuthorize', 'Could not do a capturing because request_data[\'tid\'] property is not set.'));    
+            $this->setWarning(array('capturePreAuthorize', 'Could not do the capturing because request_data[\'tid\'] property is not set.'));    
         }else{
             self::httprequest($this->envelope->requisicao_captura());
         }
@@ -187,7 +188,7 @@ class Cielo extends BrazilCards{
     public function voidTransaction(){        
         //check if there is a tid available
         if(empty($this->envelope->request_data['tid'])){
-            $this->setWarning(array('capturePreAuthorize', 'Could not do a voiding because request_data[\'tid\'] property is not set.'));    
+            $this->setWarning(array('capturePreAuthorize', 'Could not do the voiding because request_data[\'tid\'] property is not set.'));    
         }else{
             self::httprequest($this->envelope->requisicao_cancelamento());
         }
@@ -218,7 +219,7 @@ class Cielo extends BrazilCards{
                            'AutoCapturer'      => array('#default'  => 'true',
                                                         '#expected' => array('false', 'true',),
                                                        ),
-                           'AuthorizationType' => array('#default'  => 1,
+                           'AuthorizationType' => array('#default'  => 2,
                                                         '#expected' => array('0','1','2','3'),
                                                        ),
                            'Authenticate'      => array('#default'  => true,
@@ -285,6 +286,28 @@ class Cielo extends BrazilCards{
             $this->envelope->validateServer($this);
         }
     }
+
+    /**
+     * Set transaction Id
+     */
+    public function setTid($tid){
+        $this->envelope->request_data['tid'] = $tid;
+    }
+    
+    /**
+     * Set Currency
+     */
+    public function setCurrency($currency){
+        $this->envelope->request_data['currency_code'] = $currency;
+    }
+
+    /**
+     * Set Returning URL
+     */
+    public function setReturnUrl($url){
+        $this->envelope->request_data['return_url'] = $url;
+    }
+
     
     /**
      * Helper function
@@ -336,8 +359,17 @@ class Cielo extends BrazilCards{
         if ($resultado){
             $this->response = simplexml_load_string($resultado);
             
+            //covert the simplexml objects into arrays
+            $this->response = (array) $this->response;
+            
+            foreach($this->response as $key => $value){
+              if(is_object($value)){
+                $this->response[$key] = (array) $value;
+              }
+            }
+            
         }else{
-            $this->setWarning(array('curl_error', curl_error($sessao_curl)));
+            $this->setWarning(array('curl_error', '<pre>'.curl_error($sessao_curl).'</pre>'));
         }
     }
 }

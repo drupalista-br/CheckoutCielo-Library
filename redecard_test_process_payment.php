@@ -27,7 +27,7 @@
                                           //'Creditor'        => 2, //when 'Installments' > 1 then this value gotta be either 2 == merchant is the creditor or 3 == redecard is the creditor
                                                                     //Default == 3
 
-                                          //'Authenticate'   => TRUE,  //Default == FALSE, When TRUE you will have to send the
+                                          'Authenticate'   => TRUE,  //Default == FALSE, When TRUE you will have to send the
                                                                        //AVS (Address Verification System) data below
                                                                        
                                           /* AVS available only for mastercard and diners issued in Brazil */
