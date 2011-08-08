@@ -16,26 +16,6 @@
  * @version 1.0 Alpha
  * @license http://creativecommons.org/licenses/by-nc/3.0/br/ CC BY-NC 3.0 
  * 
- *  --------------------------------H I R I N G   M E ---------------------------------------------------
- *  
- * - I am available for freelancing jobs and casual employment.
- *   (I speak both english and portuguese fluently, portuguese being my native tongue)
- * - My services include, but not limited to, training sessions on Drupal for business enterprises,
- *   individuals and professionals in the IT / Webdevelopment industry;
- *    # Drupal consulting and module development;
- *    # Deploying and implementing solutions like:
- *        1. Open Public (http://openpublicapp.com), ideal for local goverment websites and
- *           goverment agencies in general.
- *        2. Open Publish (http://openpublishapp.com), this is a perfect fit for media websites such as
- *           Tv Networks, News and Magazines.
- *
- *   Contact me via
- *   E-mail: contato at drupalista dot com dot br
- *   Phone: +55 66 3521 9132 (Business hours, my time zone is Cuiaba, Brazil GMT -4)
- *   Mobile: +55 66 9245 5809
- *
- *   Francisco Luz
- *   July 2011
  */
 include_once(dirname(__FILE__).'/BrazilCards.class.php'); 
 include_once(dirname(__FILE__).'/cielo/cielo_xml_xsd.class.php');
@@ -150,7 +130,7 @@ class Cielo extends BrazilCards{
             self::httprequest($this->envelope->requisicao_transacao());
 
             if(isset($this->response['url-autenticacao']) && $this->envelope->request_data['autoRedirect']){
-                //redirect browser to cielo for collecting the card details and performing authentication
+                //redirect browser to cielo for collecting buyer's card details and performing authentication
                 header( 'Location: '.$this->response['url-autenticacao']);
             }
         }
@@ -295,7 +275,7 @@ class Cielo extends BrazilCards{
 
     /**
      * Set transaction Id
-     * @param String $tid The transaction Id that came in the server response
+     * @param String $tid The transaction Id that came obtained from a provious server response
      */
     public function setTid($tid){
         $this->envelope->request_data['tid'] = $tid;
@@ -331,7 +311,7 @@ class Cielo extends BrazilCards{
     /**
      * Set Auto Redirect
      * 
-     * @param Boolean $value Determine whether or the browser should be redirected to
+     * @param Boolean $value Determine whether or not the browser should be redirected to
      *                       Cielo right after a response in which redirection for
      *                       further processing is required.
      */
@@ -340,9 +320,19 @@ class Cielo extends BrazilCards{
     }
     
     /**
+     * Set Location for SSL Certificate File
+     * 
+     * @param String $location The absolute location and file name of the SSL certificate file
+     * 
+     */
+    public function setCertificateLocation($location){
+        $this->ws['curl_pubKey'] = $location;
+    }
+    
+    /**
      * Helper function
      *
-     * It makes a xml requests to cielo's webservice
+     * It makes xml request calls to cielo's webservice
      */    
     private function httprequest($xsd){
         $xsd = 'mensagem='.$xsd;
@@ -367,7 +357,7 @@ class Cielo extends BrazilCards{
         if ($resultado){
             $this->response = simplexml_load_string($resultado);
             
-            //covert the simplexml objects into arrays
+            //convert the simplexml objects into arrays
             $this->response = (array) $this->response;
             
             foreach($this->response as $key => $value){
