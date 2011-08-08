@@ -54,7 +54,7 @@ class Cielo extends BrazilCards{
                       'merchant'        => '1006993069',
                       'merchant_chave'  => '25fbb99741c739dd84d7b06ec78c9bac718838630f30b112d033ce2e621b34f3',
                       
-                      //these are the membership number and token for when customers are going to provide card detaisl at cielo's website
+                      //these are the membership number and token for when customers are going to provide card details at cielo's website
                       'cielo'           => '1001734898',
                       'cielo_chave'     => 'e84827130b9837473681c2787007da5914d6359947015a5cdb2b8843db0fa832',
                      );
@@ -69,7 +69,7 @@ class Cielo extends BrazilCards{
         $this->ws['manual_version'] = '1.5.6 Last Updated in October 2010';
         
         //SSL Public key
-        $this->ws['curl_pubKey'] = 'VeriSignClass3PublicPrimaryCertificationAuthority-G5.crt';
+        $this->ws['curl_pubKey'] = dirname(__FILE__).'/cielo/VeriSignClass3PublicPrimaryCertificationAuthority-G5.crt';
         
         //validate public key for curl requests
         $this->ws['curl_use_ssl'] = TRUE;
@@ -82,8 +82,10 @@ class Cielo extends BrazilCards{
                                               'currency_code' => 986,                  //Currency code, defaulted to BRL
                                               'language_code' => 'PT',                 //language code
                                               'date_time'     => date("Y-m-d\TH:i:s"), //date and time
-                                            
                                               'tid'           => '',
+                                              //this determine if an redirection for authentication is made right away once
+                                              //we get the value of $response['url-autenticacao']
+                                              'autoRedirect'  => FALSE,
                                               );
         
         /** url for returning from cielo after authentication has taken place **/
@@ -114,7 +116,7 @@ class Cielo extends BrazilCards{
      
     public function authorize(){
 
-        /** Create a transaction at cielo's webservice */
+        /** Create a tid */
         if($this->parameters['CardHandling']){
             //merchant is collecting card details and sending them through
             
@@ -122,8 +124,12 @@ class Cielo extends BrazilCards{
                 //request a new transaction
                 self::httprequest($this->envelope->requisicao_transacao());
 
-                //redirect browser to cielo for authenticating the card holder
-                header('Location: '.$this->response['url-autenticacao']);
+                //the authentication url wont be present if the merchant has opted to
+                //not authenticate the card hold so that's the why we gotta check it.
+                if(isset($this->response['url-autenticacao']) && $this->envelope->request_data['autoRedirect']){
+                    //redirect browser to cielo for authenticating the card holder
+                    header('Location: '.$this->response['url-autenticacao']);    
+                }
                 
                 //once the browser is redirected back from cielo, the application will have to perform a follow up on this
                 //transaction to find out if it has been authorized or not by calling $myObject->followUp().
@@ -143,8 +149,10 @@ class Cielo extends BrazilCards{
             //request a new transaction
             self::httprequest($this->envelope->requisicao_transacao());
 
-            //redirect browser to cielo for collecting card details and doing authentication
-            header( 'Location: '.$this->response['url-autenticacao']);
+            if(isset($this->response['url-autenticacao']) && $this->envelope->request_data['autoRedirect']){
+                //redirect browser to cielo for collecting the card details and performing authentication
+                header( 'Location: '.$this->response['url-autenticacao']);
+            }
         }
     }
     
@@ -240,7 +248,7 @@ class Cielo extends BrazilCards{
         }
         
         //make sure the boolean value `true' wont be represented by 1
-        if($this->parameters['AutoCapturer'] == 1){
+        if($this->parameters['AutoCapturer'] === 1){
             $this->parameters['AutoCapturer'] = 'true';    
         }
 
@@ -258,8 +266,6 @@ class Cielo extends BrazilCards{
         if(!empty($paymentAttributes['CardNumber'])){
             $this->parameters['CardHandling'] = true;
             
-            //TODO: validate card details
-            
             //set default indicator
             $this->envelope->request_data['indicador'] = 1;
      
@@ -271,7 +277,7 @@ class Cielo extends BrazilCards{
         }
         
         if($this->is_test){
-            /** this is a test environment so we need to define filiacao and chave values **/
+            /** this is a test environment so we need to define values for filiacao and chave **/
             
             //default: merchant collects card details from its customers 
             $this->membership['filiacao'] = $this->ws['merchant'];
@@ -289,6 +295,7 @@ class Cielo extends BrazilCards{
 
     /**
      * Set transaction Id
+     * @param String $tid The transaction Id that came in the server response
      */
     public function setTid($tid){
         $this->envelope->request_data['tid'] = $tid;
@@ -296,59 +303,60 @@ class Cielo extends BrazilCards{
     
     /**
      * Set Currency
+     * @param String $currency The ISO 4217 currency code with 3 digits number
      */
     public function setCurrency($currency){
         $this->envelope->request_data['currency_code'] = $currency;
     }
 
     /**
+     * Set Language Code
+     *
+     * @param String $lang Expected codes are: PT, EN or ES
+     */
+    public function setLanguage($lang){
+        $this->envelope->request_data['language_code'] = $lang;
+    }
+
+    /**
      * Set Returning URL
+     * 
+     * @param String $url The script url for concluding the payment processing
+     *                    after returning from Cielo
      */
     public function setReturnUrl($url){
         $this->envelope->request_data['return_url'] = $url;
     }
 
+    /**
+     * Set Auto Redirect
+     * 
+     * @param Boolean $value Determine whether or the browser should be redirected to
+     *                       Cielo right after a response in which redirection for
+     *                       further processing is required.
+     */
+    public function setAutoRedirect($value){
+        $this->envelope->request_data['autoRedirect'] = $value;
+    }
     
     /**
      * Helper function
      *
-     * Script portion extracted from Cielo's code sample with minor modifications
-     *
-     * It sends xml requests to cielo's webservice
+     * It makes a xml requests to cielo's webservice
      */    
     private function httprequest($xsd){
         $xsd = 'mensagem='.$xsd;
         
         $sessao_curl = curl_init();
         curl_setopt($sessao_curl, CURLOPT_URL, $this->ws['url']);
-        
         curl_setopt($sessao_curl, CURLOPT_FAILONERROR, true);
-
-        //  CURLOPT_SSL_VERIFYPEER
-        //  verifica a validade do certificado
         curl_setopt($sessao_curl, CURLOPT_SSL_VERIFYPEER, $this->ws['curl_use_ssl']);
-        //  CURLOPPT_SSL_VERIFYHOST
-        //  verifica se a identidade do servidor bate com aquela informada no certificado
         curl_setopt($sessao_curl, CURLOPT_SSL_VERIFYHOST, 2);
-
-        //  CURLOPT_SSL_CAINFO
-        //  informa a localização do certificado para verificação com o peer
-        curl_setopt($sessao_curl, CURLOPT_CAINFO, dirname(__FILE__).'/cielo/'.$this->ws['curl_pubKey']);
+        curl_setopt($sessao_curl, CURLOPT_CAINFO, $this->ws['curl_pubKey']);
         curl_setopt($sessao_curl, CURLOPT_SSLVERSION, 3);
-
-        //  CURLOPT_CONNECTTIMEOUT
-        //  o tempo em segundos de espera para obter uma conexão
         curl_setopt($sessao_curl, CURLOPT_CONNECTTIMEOUT, 10);
-
-        //  CURLOPT_TIMEOUT
-        //  o tempo máximo em segundos de espera para a execução da requisição (curl_exec)
         curl_setopt($sessao_curl, CURLOPT_TIMEOUT, 40);
-
-        //  CURLOPT_RETURNTRANSFER
-        //  TRUE para curl_exec retornar uma string de resultado em caso de sucesso, ao
-        //  invés de imprimir o resultado na tela. Retorna FALSE se há problemas na requisição
         curl_setopt($sessao_curl, CURLOPT_RETURNTRANSFER, true);
-
         curl_setopt($sessao_curl, CURLOPT_POST, true);
         curl_setopt($sessao_curl, CURLOPT_POSTFIELDS, $xsd);
 

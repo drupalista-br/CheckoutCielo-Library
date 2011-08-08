@@ -194,7 +194,7 @@
     
 
 
-  /*Cartão com autenticação: 4012 0010 3714 1112 (visa)
+  /*Cartão com autenticação: 4012001037141112 (visa)
 Cartão sem autenticação: 4551870000000183 (visa), 5453 0100 0006 6167
 (mastercard), 6362 9700 0045 7013 (elo)
 Data de validade: qualquer posterior ao corrente
