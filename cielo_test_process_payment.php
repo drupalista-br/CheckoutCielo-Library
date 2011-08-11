@@ -195,8 +195,8 @@
 
 
   /*Cartão com autenticação: 4012001037141112 (visa)
-Cartão sem autenticação: 4551870000000183 (visa), 5453 0100 0006 6167
-(mastercard), 6362 9700 0045 7013 (elo)
+Cartão sem autenticação: 4551870000000183 (visa), 5453010000066167
+(mastercard), 6362970000457013 (elo)
 Data de validade: qualquer posterior ao corrente
 Código de segurança: qualquer
 Valor do pedido: para simular transação autorizada, use qualquer valor em que os dois
