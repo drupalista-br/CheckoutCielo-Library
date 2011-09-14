@@ -227,7 +227,7 @@ class Cielo extends BrazilCards{
         //save payment attributes on parameters property
         $this->parameters = $paymentAttributes = $this->arguments['payment'];
         
-        if($this->parameters['CardType'] == 'A'){
+        if(isset($this->parameters['CardType']) && $this->parameters['CardType'] == 'A'){
             //make sure authentication will always be switched on when card type is Debit
             $this->parameters['Authenticate'] == TRUE;
         }
