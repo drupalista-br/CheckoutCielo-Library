@@ -39,7 +39,7 @@ class Cielo extends BrazilCards{
                       'cielo_chave'     => 'e84827130b9837473681c2787007da5914d6359947015a5cdb2b8843db0fa832',
                      );
         
-        $live = array('url'         => 'https://ecommerce.cbmp.com.br/servicos/ecommwsec.do',
+        $live = array('url'  => 'https://ecommerce.cbmp.com.br/servicos/ecommwsec.do',
                       );
         //apply values to ws property
         $ws = ($this->is_test)?'test':'live';
@@ -318,7 +318,8 @@ class Cielo extends BrazilCards{
 
     /**
      * Set transaction Id
-     * @param String $tid The transaction Id that came obtained from a provious server response
+     * @param String $tid
+     *    The transaction Id that came obtained from a provious server response
      */
     public function setTid($tid) {
         $this->envelope->request_data['tid'] = $tid;
@@ -326,7 +327,8 @@ class Cielo extends BrazilCards{
     
     /**
      * Set Currency
-     * @param String $currency The ISO 4217 currency code with 3 digits number
+     * @param String $currency
+     *     The ISO 4217 currency code with 3 digits number
      */
     public function setCurrency($currency) {
         $this->envelope->request_data['currency_code'] = $currency;
@@ -335,7 +337,8 @@ class Cielo extends BrazilCards{
     /**
      * Set Language Code
      *
-     * @param String $lang Expected codes are: PT, EN or ES
+     * @param String $lang
+     *     Expected codes are: PT, EN or ES
      */
     public function setLanguage($lang) {
         $this->envelope->request_data['language_code'] = $lang;
@@ -344,8 +347,8 @@ class Cielo extends BrazilCards{
     /**
      * Set Returning URL
      * 
-     * @param String $url The script url for concluding the payment processing
-     *                    after returning from Cielo
+     * @param String $url
+     *     The script url for concluding the payment processing after returning from Cielo
      */
     public function setReturnUrl($url) {
         $this->envelope->request_data['return_url'] = $url;
@@ -354,9 +357,9 @@ class Cielo extends BrazilCards{
     /**
      * Set Auto Redirect
      * 
-     * @param Boolean $value Determine whether or not the browser should be redirected to
-     *                       Cielo right after a response in which redirection for
-     *                       further processing is required.
+     * @param Boolean $value
+     *    Determine whether or not the browser should be redirected to
+     *    Cielo right after a response in which redirection for further processing is required.
      */
     public function setAutoRedirect($value) {
         $this->envelope->request_data['autoRedirect'] = $value;
@@ -365,8 +368,8 @@ class Cielo extends BrazilCards{
     /**
      * Set Location for SSL Certificate File
      * 
-     * @param String $location The absolute location and file name of the SSL certificate file
-     * 
+     * @param String $location
+     *    The absolute location and file name of the SSL certificate file.
      */
     public function setCertificateLocation($location) {
         $this->ws['curl_pubKey'] = $location;
@@ -375,7 +378,7 @@ class Cielo extends BrazilCards{
     /**
      * Helper function
      *
-     * It makes xml request calls to cielo's webservice
+     * It makes xml request calls to cielo's webservice.
      */    
     private function httprequest($xsd) {
         $xsd = 'mensagem='.$xsd;
