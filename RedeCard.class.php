@@ -20,38 +20,38 @@
 include_once(dirname(__FILE__).'/BrazilCards.class.php'); 
 
 class RedeCard extends BrazilCards {
+  private $server;
 
-    private $server;
+  public $authorization = array();
+
+  public function setUp(){
+    self::setProperties();
+        
+    // Webservice settings.
+    // Define defaut values for both test and live services.
+    $test = array(
+      'url' => 'https://ecommerce.redecard.com.br/pos_virtual/wskomerci/cap_teste.asmx',
+      'USR' => 'testews',
+      'PWD' => 'testews',
+    );
     
-    public $authorization = array();
+    $live = array('url'    => 'https://ecommerce.redecard.com.br/pos_virtual/wskomerci/cap.asmx',
+                  );
+    
+    //apply values to ws property    
+    $ws       = ($this->is_test)?'test':'live';
+    $this->ws = ${$ws};
+    
+    //manual version
+    $this->ws['manual_version'] = '2.5 Last Updated at Sep 20 2010';
 
-    public function setUp(){
-        self::setProperties();
-        
-        /** Webservice settings **/
-        //define defaut values for both test and live services
-        $test = array('url'      => 'https://ecommerce.redecard.com.br/pos_virtual/wskomerci/cap_teste.asmx',
-                      'USR'      => 'testews',
-                      'PWD'      => 'testews',
-                      );
-        
-        $live = array('url'    => 'https://ecommerce.redecard.com.br/pos_virtual/wskomerci/cap.asmx',
-                      );
-        
-        //apply values to ws property    
-        $ws       = ($this->is_test)?'test':'live';
-        $this->ws = ${$ws};
-        
-        //manual version
-        $this->ws['manual_version'] = '2.5 Last Updated at Sep 20 2010';
-
-        //connect with remote service
-        try{
-            $this->server = new SoapClient($this->ws['url'].'?wsdl');
-        }catch(SoapFault $e){
-            $this->setWarning(array('exception', $e));
-        }
+    //connect with remote service
+    try{
+        $this->server = new SoapClient($this->ws['url'].'?wsdl');
+    }catch(SoapFault $e){
+        $this->setWarning(array('exception', $e));
     }
+}
 
     public function authorize(){
         self::setParameters('authorize');
