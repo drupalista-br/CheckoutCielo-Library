@@ -59,8 +59,180 @@ class Cielo extends BrazilCards {
    * Cielo's Developmento Manual.
    */
   const CIELO_DEV_MANUAL = '1.5.6 Last Updated in October 2010';
+
+  /**
+   * I am not quite sure what this indicator is for. Just following the manual.
+   */
+  const CIELO_INDICADOR_DEFAULT = 1;
+
+  /**
+   * I am not quite sure what this indicator is for. Just following the manual.
+   */
+  const CIELO_INDICADOR_CVS_EMPTY = 0;
+
+  /**
+   * I am not quite sure what this indicator is for. Just following the manual.
+   */
+  const CIELO_INDICADOR_MASTERCARD = 1;
+
+  /**
+   * Used for installment payment terms.
+   *
+   * The merchant is the credit provider.
+   */
+  const CIELO_MERCHANT_IS_CREDITOR = '2';
+  /**
+   * Used for installment payment terms.
+   *
+   * A 3rd party (finantial institution) is the credit provider.
+   */
+  const CIELO_CARD_ISSUER_IS_CREDITOR = '3';
   
-  // Holds the xml object.
+  /**
+   * Defines the Card Mode, either Credit or Debit.
+   *
+   * Debit.
+   */
+  const CIELO_TYPE_DEBIT_CARD = 'A';
+  
+  /**
+   * Defines the Card Mode, either Credit or Debit.
+   *
+   * Credit.
+   */
+  const CIELO_TYPE_CREDIT_CARD = '1';
+
+  /**
+   * Authentication Type.
+   *
+   * Authentication Only.
+   */
+  const CIELO_AUTHENTICATION_ONLY = 0;
+    
+  /**
+   * Authentication Type.
+   *
+   * Authorize Only If Athenticated.
+   */
+  const CIELO_AUTHORIZE_ONLY_IF_AUTHENTICATED = 1;
+    
+  /**
+   * Authentication Type.
+   *
+   * Authorize Either Authenticated Or Not.
+   */
+  const CIELO_AUTHORIZE_EITHER_AUTHENTICATED_OR_NOT = 2;
+    
+  /**
+   * Authentication Type.
+   *
+   * Skip Authentication And Go Straight To Authorization.
+   */
+  const CIELO_SKIP_AUTHENTICATION = 3;
+    
+  /**
+   * Defines the Cielo's languange interface.
+   *
+   * Portuguese.
+   */
+  const CIELO_LANG_PT = 'PT';
+    
+  /**
+   * Defines the Cielo's languange interface.
+   *
+   * Spanish.
+   */
+  const CIELO_LANG_ES = 'ES';
+    
+  /**
+   * Defines the Cielo's languange interface.
+   *
+   * English.
+   */
+  const CIELO_LANG_EN = 'EN';
+    
+  /**
+   * Defines the Card Flag.
+   *
+   * Master Card.
+   */
+  const CIELO_FLAG_MASTERCARD = 'mastercard';
+    
+  /**
+   * Defines the Card Flag.
+   *
+   * Visa.
+   */
+  const CIELO_FLAG_VISA = 'visa';
+    
+  /**
+   * Defines the Card Flag.
+   *
+   * Elo.
+   */
+  const CIELO_FLAG_ELO = 'elo';
+    
+  /**
+   * Defines the Remote Status of the Transaction.
+   */
+  const CIELO_TRANSACTION_CREATED = 0;
+    
+  /**
+   * Defines the Remote Status of the Transaction.
+   */
+  const CIELO_IN_PROGRESS = 1;
+    
+  /**
+   * Defines the Remote Status of the Transaction.
+   */
+  const CIELO_AUTHENTICATED = 2;
+    
+  /**
+   * Defines the Remote Status of the Transaction.
+   */
+  const CIELO_NOT_AUTHENTICATED = 3;
+    
+  /**
+   * Defines the Remote Status of the Transaction.
+   *
+   * Authorized or still to be captured.
+   */
+  const CIELO_AUTHORIZED = 4;
+    
+  /**
+   * Defines the Remote Status of the Transaction.
+   */
+  const CIELO_BEING_AUTHENTICATED = 10;
+    
+  /**
+   * Defines the Remote Status of the Transaction.
+   *
+   * Success.
+   */
+  const CIELO_CAPTURED = 6;
+    
+  /**
+   * Defines the Remote Status of the Transaction.
+   *
+   * Failure.
+   */
+  const CIELO_AUTHORIZATION_DENIED = 5;
+    
+  /**
+   * Defines the Remote Status of the Transaction.
+   *
+   * Failure.
+   */
+  const CIELO_NOT_CAPTURED = 8;
+    
+  /**
+   * Defines the Remote Status of the Transaction.
+   */
+  const CIELO_VOIDED = 9;
+
+  /**
+   * Holds the xml object.
+   */
   private $envelope;
 
   public function setUp() {
@@ -107,7 +279,7 @@ class Cielo extends BrazilCards {
       // Currency code, defaulted to BRL.
       'currency_code' => 986,
       // Language code.
-      'language_code' => 'PT',
+      'language_code' => self::CIELO_LANG_PT,
       // Date and time.
       'date_time' => date("Y-m-d\TH:i:s"),
       'tid' => '',
@@ -274,7 +446,7 @@ class Cielo extends BrazilCards {
     // Save payment attributes on parameters property.
     $this->parameters = $paymentAttributes = $this->arguments['payment'];
     
-    if(isset($this->parameters['CardType']) && $this->parameters['CardType'] == 'A'){
+    if(isset($this->parameters['CardType']) && $this->parameters['CardType'] == self::CIELO_TYPE_DEBIT_CARD){
       // Make sure authentication will always be switched on when card type is
       // Debit.
       $this->parameters['Authenticate'] == TRUE;
@@ -291,24 +463,29 @@ class Cielo extends BrazilCards {
         '#default' => 1,
       ),
       'Creditor' => array(
-        '#default' => 3,
-        '#expected' => array('2','3'),
+        '#default' => self::CIELO_CARD_ISSUER_IS_CREDITOR,
+        '#expected' => array(self::CIELO_MERCHANT_IS_CREDITOR, self::CIELO_CARD_ISSUER_IS_CREDITOR),
       ),
       'CardType' => array(
-        '#default'  => 1,
-        '#expected' => array('A','1'),
+        '#default'  => self::CIELO_TYPE_CREDIT_CARD,
+        '#expected' => array(self::CIELO_TYPE_DEBIT_CARD, self::CIELO_TYPE_CREDIT_CARD),
       ),
       'AutoCapturer' => array(
         '#default' => 'true',
         '#expected' => array('false', 'true'),
       ),
       'AuthorizationType' => array(
-        '#default'  => 2,
-        '#expected' => array('0','1','2','3'),
+        '#default'  => self::CIELO_AUTHORIZE_EITHER_AUTHENTICATED_OR_NOT,
+        '#expected' => array(
+          self::CIELO_AUTHENTICATION_ONLY,
+          self::CIELO_AUTHORIZE_ONLY_IF_AUTHENTICATED,
+          self::CIELO_AUTHORIZE_EITHER_AUTHENTICATED_OR_NOT,
+          self::CIELO_SKIP_AUTHENTICATION,
+        ),
       ),
       'Authenticate' => array(
-        '#default'  => true,
-        '#expected' => array('0', '1'),
+        '#default'  => 'true',
+        '#expected' => array('false', 'true'),
       ),
     );
 
@@ -349,26 +526,26 @@ class Cielo extends BrazilCards {
       $this->parameters['CardHandling'] = TRUE;
 
       // Set default indicator as 1.
-      $this->envelope->request_data['indicador'] = 1;
+      $this->envelope->request_data['indicador'] = self::CIELO_INDICADOR_DEFAULT;
    
       if (empty($paymentAttributes['CVC'])) {
-        $this->envelope->request_data['indicador'] = 0;
+        $this->envelope->request_data['indicador'] = self::CIELO_INDICADOR_CVS_EMPTY;
       }
       elseif ($paymentAttributes['CardFlag'] == 'mastercard') {
-        $this->envelope->request_data['indicador'] = 1;
+        $this->envelope->request_data['indicador'] = self::CIELO_INDICADOR_MASTERCARD;
       }
     }
     
     if ($this->is_test) {
       // This is a test environment so we need to define values for filiacao
       // and chave.
-      
-      // Default: merchant collects card details from its customers 
+
+      // Default: merchant collects card details from its customers.
       $this->membership['filiacao'] = $this->ws['merchant'];
       $this->membership['chave']  = $this->ws['merchant_chave'];
 
       if (!$this->parameters['CardHandling']) {
-        // Customers are asked to provide their card details at cielo's website
+        // Customers are asked to provide their card details at cielo's website.
         $this->membership['filiacao'] = $this->ws['cielo'];
         $this->membership['chave']  = $this->ws['cielo_chave'];
       }
@@ -379,25 +556,25 @@ class Cielo extends BrazilCards {
   }
 
   /**
-   * Set transaction Id
+   * Set transaction Id.
    * @param String $tid
-   *  The transaction Id that came obtained from a provious server response
+   *  The transaction Id that came obtained from a provious server response.
    */
   public function setTid($tid) {
     $this->envelope->request_data['tid'] = $tid;
   }
   
   /**
-   * Set Currency
+   * Set Currency.
    * @param String $currency
-   *   The ISO 4217 currency code with 3 digits number
+   *   The ISO 4217 currency code with 3 digits number.
    */
   public function setCurrency($currency) {
     $this->envelope->request_data['currency_code'] = $currency;
   }
 
   /**
-   * Set Language Code
+   * Set Language Code.
    *
    * @param String $lang
    *   Expected codes are: PT, EN or ES
@@ -407,7 +584,7 @@ class Cielo extends BrazilCards {
   }
 
   /**
-   * Set Returning URL
+   * Set Returning URL.
    * 
    * @param String $url
    *   The script url for concluding the payment processing after returning from
@@ -418,7 +595,7 @@ class Cielo extends BrazilCards {
   }
 
   /**
-   * Set Auto Redirect
+   * Set Auto Redirect.
    * 
    * @param Boolean $value
    *  Determine whether or not the browser should be redirected to
@@ -479,7 +656,7 @@ class Cielo extends BrazilCards {
       }
     }
     else {
-      $this->setWarning(array('curl_error', '<pre>'.curl_error($sessao_curl).'</pre>'));
+      $this->setWarning(array('curl_error', '<pre>' . curl_error($sessao_curl) . '</pre>'));
     }
     // Close Curl session.
     curl_close($sessao_curl);
