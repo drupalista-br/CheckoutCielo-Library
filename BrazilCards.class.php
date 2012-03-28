@@ -88,7 +88,7 @@ abstract class BrazilCards {
    */    
   public function setWarning($message, $action = TRUE){
     if ($action) {
-      $this->warnings[$message[0]] = $message[1];
+      $this->warnings[$message[0]][] = $message[1];
     }
     else {
       unset($this->warnings[$message[0]]);

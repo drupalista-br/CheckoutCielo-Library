@@ -56,7 +56,7 @@ class Cielo extends BrazilCards {
   const CIELO_SANDBOX_OFF_SITE_MERCHANT_TOKEN = 'e84827130b9837473681c2787007da5914d6359947015a5cdb2b8843db0fa832';
   
   /**
-   * Cielo's Developmento Manual.
+   * Cielo's Development Manual.
    */
   const CIELO_DEV_MANUAL = '1.5.6 Last Updated in October 2010';
 
@@ -494,12 +494,16 @@ class Cielo extends BrazilCards {
       // override it with its default value.
       if (isset($paymentAttributes[$attribute]) && isset($settings['#expected']) && !in_array($paymentAttributes[$attribute], $settings['#expected'])) {
         $this->parameters[$attribute]  = $settings['#default'];
+        // Set a warning.
+        $this->setWarning(array("parameter_sent", "Parameter $attribute has an unexpected value and therefore has been ignored. The default value ". $settings['#default'] . " was used instead. Double check your application."));
       }
 
       // If paramenter was not set and there is a default value for it, then we
       // set its default.
       if (!isset($paymentAttributes[$attribute]) && isset($settings['#default'])) {
         $this->parameters[$attribute]  = $settings['#default'];
+        // Set a warning.
+        $this->setWarning(array("parameter_sent_empty", "Parameter $attribute has an empty value and its default value ". $settings['#default'] . " was used. Double check your application."));
       }
     }
 
