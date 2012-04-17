@@ -273,7 +273,7 @@ class Cielo extends BrazilCards {
     $this->envelope = new cielo_xml_xsd();
 
     // Set default values for xsd envelopes.
-    $this->envelope->request_data = array(
+    $this->envelope->request_data = array (
       // Cielo's xsd version.
       'xsd_version'   => '1.1.0',
       // Currency code, defaulted to BRL.
@@ -627,7 +627,7 @@ class Cielo extends BrazilCards {
    * It makes xml request calls to cielo's webservice.
    */  
   private function httprequest($xsd) {
-    $xsd = 'mensagem='.$xsd;
+    $xsd = 'mensagem=' . $xsd;
     
     $sessao_curl = curl_init();
     curl_setopt($sessao_curl, CURLOPT_URL, $this->ws['url']);
@@ -665,5 +665,136 @@ class Cielo extends BrazilCards {
     // Close Curl session.
     curl_close($sessao_curl);
   }
+  
+  /**
+   * Static method that returns an array containing all the available flags.
+   * 
+   * @param Boolean $valued
+   *   Whether or not the returned array is valued with the card flag names.
+   * @param String $function_name
+   *   The name of your custom callback function in which the returning result
+   *   will be sent through.
+   */  
+  static public function get_card_flags($valued = TRUE, $function_name = NULL) {
+    if ($valued) {
+      $result = array(
+        self::CIELO_FLAG_MASTERCARD => 'Mastercard',
+        self::CIELO_FLAG_VISA => 'Visa',
+        self::CIELO_FLAG_ELO => 'Elo',
+      );
+    }
+    else {
+      $result = array(
+        self::CIELO_FLAG_MASTERCARD,
+        self::CIELO_FLAG_VISA,
+        self::CIELO_FLAG_ELO,
+      );
+    }
+    if ($function_name && function_exists($function_name)) {
+      return $function_name($result);
+    }
+    else {
+      return $result;
+    }
+  }
+  
+  /**
+   * Static method that returns an array containing all the Authorization Types.
+   * 
+   * @param Boolean $valued
+   *   Whether or not the returned array is valued with the Authorization Type
+   *   names.
+   * @param String $function_name
+   *   The name of your custom callback function in which the returning result
+   *   will be sent through.
+   */  
+  static public function get_authorization_options($valued = TRUE, $function_name = NULL) {
+    if ($valued) {
+      $result = array(
+        self::CIELO_AUTHENTICATION_ONLY => 'Authentication only. (use this only if you know what you are doing.)',
+        self::CIELO_AUTHORIZE_ONLY_IF_AUTHENTICATED => 'Authorize only if authenticaded',
+        self::CIELO_AUTHORIZE_EITHER_AUTHENTICATED_OR_NOT => 'Authorize either authenticated or not',
+        self::CIELO_SKIP_AUTHENTICATION => 'Skip authentication and go straight to authorization',
+      );
+    }
+    else {
+      $result = array(
+        self::CIELO_AUTHENTICATION_ONLY,
+        self::CIELO_AUTHORIZE_ONLY_IF_AUTHENTICATED,
+        self::CIELO_AUTHORIZE_EITHER_AUTHENTICATED_OR_NOT,
+        self::CIELO_SKIP_AUTHENTICATION,
+      );
+    }
+    if ($function_name && function_exists($function_name)) {
+      return $function_name($result);
+    }
+    else {
+      return $result;
+    }
+  }
+  
+  /**
+   * Static method that returns an array containing all the languages supported
+   * by Cielo.
+   * 
+   * @param Boolean $valued
+   *   Whether or not the returned array is valued with the language names.
+   * @param String $function_name
+   *   The name of your custom callback function in which the returning result
+   *   will be sent through.
+   */  
+  static public function get_languages($valued = TRUE, $function_name = NULL) {
+    if ($valued) {
+      $result = array(
+        self::CIELO_LANG_PT => 'Portuguese',
+        self::CIELO_LANG_EN => 'English',
+        self::CIELO_LANG_ES => 'Spanish',
+      );
+    }
+    else {
+      $result = array(
+        self::CIELO_LANG_PT,
+        self::CIELO_LANG_EN,
+        self::CIELO_LANG_ES,
+      );
+    }
+    if ($function_name && function_exists($function_name)) {
+      return $function_name($result);
+    }
+    else {
+      return $result;
+    }
+  }
+
+  /**
+   * Static method that returns an array containing all the languages supported
+   * by Cielo.
+   * 
+   * @param Boolean $valued
+   *   Whether or not the returned array is valued with the language names.
+   * @param String $function_name
+   *   The name of your custom callback function in which the returning result
+   *   will be sent through.
+   */  
+  static public function get_installment_creditor_options($valued = TRUE, $function_name = NULL) {
+    if ($valued) {
+      $result = array(
+        self::CIELO_MERCHANT_IS_CREDITOR => 'Merchant is the creditor.',
+        self::CIELO_CARD_ISSUER_IS_CREDITOR => 'Card issuer / Cielo are the creditors.',
+      );
+    }
+    else {
+      $result = array(
+        self::CIELO_MERCHANT_IS_CREDITOR,
+        self::CIELO_CARD_ISSUER_IS_CREDITOR,
+      );
+    }
+    if ($function_name && function_exists($function_name)) {
+      return $function_name($result);
+    }
+    else {
+      return $result;
+    }
+  }
+
 }
-?>
