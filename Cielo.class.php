@@ -1,25 +1,17 @@
 <?php
 /**
- * Project:  Webservice Consumer on the Brazilian Credit Card Operators
- * File: Cielo.class.php
+ * @file
+ * Cielo Webservice Consumer.
  *
- * This code is released under the Creative Commons CC BY-NC 3.0 
- * Visit http:// Creativecommons.org/licenses/by-nc/3.0/br/ for more information
- * on this licence.
- *
- * You are required to purchase a license permission for comercial use of this
- * code.
- *
- * @file Class for Cielo's webservice consumer
- * @copyright 2011 Drupalista.com.br 
- * @author Francisco Luz <franciscoferreiraluz at yahoo dot com dot au>
- * @package BrazilCards
- * @version 1.0 Alpha
- * @license http:// Creativecommons.org/licenses/by-nc/3.0/br/ CC BY-NC 3.0 
+ * @mainpage Cielo Webservice Consumer.
  */
+
 include_once dirname(__FILE__) . '/BrazilCards.class.php'; 
 include_once dirname(__FILE__) . '/cielo/cielo_xml_xsd.class.php';
 
+/**
+ * Implements BrazilCards class.
+ */
 class Cielo extends BrazilCards {
   /**
    * Cielo's URL for real transactions.
@@ -553,9 +545,6 @@ class Cielo extends BrazilCards {
         $this->membership['filiacao'] = $this->ws['cielo'];
         $this->membership['chave']  = $this->ws['cielo_chave'];
       }
-    }
-    else {
-      $this->envelope->validateServer($this);
     }
   }
 
