@@ -251,7 +251,7 @@ class Cielo extends BrazilCards {
     // Sets the test credentials as default.
     $this->ws = $test;
     
-    // Set the path to the CA file (SSL Public key) for testing enviroment.
+    // Set the path to the CA file (SSL Public key) for the testing enviroment.
     $this->ws['curl_pubKey'] = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'cielo' . DIRECTORY_SEPARATOR . 'VeriSignClass3PublicPrimaryCertificationAuthority-G5.crt';
 
     if (!$this->is_test) {
@@ -330,8 +330,8 @@ class Cielo extends BrazilCards {
         // The authentication url wont be present if the merchant has opted to
         // not authenticate the card hold so that's the why we gotta check it.
         if (isset($this->response['url-autenticacao']) && $this->envelope->request_data['autoRedirect']) {
-          // Redirect browser to cielo for authenticating the card holder
-          header('Location: ' . $this->response['url-autenticacao']);  
+          // Redirect browser to cielo for authenticating the card holder.
+          header('Location: ' . $this->response['url-autenticacao']);
         }
 
         // Once the browser is redirected back from cielo, the application will
@@ -360,7 +360,7 @@ class Cielo extends BrazilCards {
       }
     }
   }
-  
+
   /**
    * Checks if there is a transaction Id available, if so then it requests
    * details about that transaction to the remote server.
@@ -374,16 +374,18 @@ class Cielo extends BrazilCards {
       self::httprequest($this->envelope->requisicao_consulta());      
     }
   }
+
   /**
    * Alias of capturePreAuthorize() but it will always attempts capturing the
    * full amount previously authorized if there is any.
    *
    * To capture an amount smaller than the one previously authorized you
-   * should then call $object->capturePreAuthorize($mySmallerAmount)
+   * should then call $object->capturePreAuthorize($mySmallerAmount).
    */
   public function capture() {
     self::capturePreAuthorize();
   }
+
   /**
    * Requests the capturing of a transaction previously authorized.
    *
@@ -406,7 +408,7 @@ class Cielo extends BrazilCards {
       break;
     }
     else {
-      // Partial capture or $amount represents 100% of the authorized amount
+      // Partial capture or $amount represents 100% of the authorized amount.
       $this->envelope->request_data['captureAmount'] = $amount;
     }
     
@@ -455,7 +457,7 @@ class Cielo extends BrazilCards {
      * #expected holds the list of valid values.
      *   If the value set doesn't match any of the expected values then its
      *   default will prevail.
-     **/
+     */
     $checkList = array(
       'Installments' => array(
         '#default' => 1,
@@ -556,6 +558,7 @@ class Cielo extends BrazilCards {
 
   /**
    * Set transaction Id.
+   * 
    * @param String $tid
    *  The transaction Id that came obtained from a provious server response.
    */
@@ -565,6 +568,7 @@ class Cielo extends BrazilCards {
   
   /**
    * Set Currency.
+   * 
    * @param String $currency
    *   The ISO 4217 currency code with 3 digits number.
    */
@@ -576,7 +580,7 @@ class Cielo extends BrazilCards {
    * Set Language Code.
    *
    * @param String $lang
-   *   Expected codes are: PT, EN or ES
+   *   Expected codes are: PT, EN or ES.
    */
   public function setLanguage($lang) {
     $this->envelope->request_data['language_code'] = $lang;
