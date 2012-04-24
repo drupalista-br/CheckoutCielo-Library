@@ -25,13 +25,19 @@ class cielo_xml_xsd {
     private $CardExpiration;
 
     /**
-     * TODO: Document this . 
+     * Sets the Cielo Object on $Cielo property.
+     *
+     * If Card handling is done by the merchant then it also sets the
+     * $CardExpiration property.
+     *
+     * @param Object $Cielo
+     *  The Cielo Object.
      */ 
     public function setObject($Cielo){
         $this->Cielo = $Cielo;
         
         if($this->Cielo->parameters['CardHandling']){
-            //assemble card expiration value
+            // Assemble card expiration value.
             $this->CardExpiration = $this->Cielo->parameters['ExpirationYear'] . $this->Cielo->parameters['ExpirationMonth'];
         }
     }
@@ -48,7 +54,7 @@ class cielo_xml_xsd {
      * requisicao_cancelamento.
      */
     public function requisicao_transacao(){
-        return  "<?xml version='1 . 0' encoding='ISO-8859-1'?>" . 
+        return  "<?xml version='1.0' encoding='ISO-8859-1'?>" . 
                     "<requisicao-transacao id='" . md5(date("YmdHisu")) . "' versao='" . $this->request_data['xsd_version'] . "'>" . 
                         self::dados_ec() . 
                         self::dados_portador() . 
@@ -64,7 +70,7 @@ class cielo_xml_xsd {
      * TODO: Document this.
      */ 
     public function requisicao_tid(){
-        return  "<?xml version='1 . 0' encoding='ISO-8859-1'?>" . 
+        return  "<?xml version='1.0' encoding='ISO-8859-1'?>" . 
                     "<requisicao-tid id='" . md5(date("YmdHisu")) . "' versao='" . $this->request_data['xsd_version'] . "'>" . 
                         self::dados_ec() . 
                         self::forma_pagamento() . 
@@ -75,7 +81,7 @@ class cielo_xml_xsd {
      * TODO: Document this.
      */ 
     public function requisicao_autorizacao_portador(){
-        return  "<?xml version='1 . 0' encoding='ISO-8859-1'?>" . 
+        return  "<?xml version='1.0' encoding='ISO-8859-1'?>" . 
                     "<requisicao-autorizacao-portador id='" . md5(date("YmdHisu")) . "' versao='" . $this->request_data['xsd_version'] . "'>" . 
                         "<tid>" . $this->request_data['tid'] . "</tid>" . 
                         self::dados_ec() . 
@@ -90,7 +96,7 @@ class cielo_xml_xsd {
      * TODO: Document this.
      */ 
     public function requisicao_autorizacao_tid(){
-        return  "<?xml version='1 . 0' encoding='ISO-8859-1'?>" . 
+        return  "<?xml version='1.0' encoding='ISO-8859-1'?>" . 
                     "<requisicao-autorizacao-tid id='" . md5(date("YmdHisu")) . "' versao='" . $this->request_data['xsd_version'] . "'>" . 
                         "<tid>" . $this->request_data['tid'] . "</tid>" . 
                         self::dados_ec() . 
@@ -101,7 +107,7 @@ class cielo_xml_xsd {
      * TODO: Document this.
      */ 
     public function requisicao_captura(){
-        return "<?xml version='1 . 0' encoding='ISO-8859-1'?>" . 
+        return "<?xml version='1.0' encoding='ISO-8859-1'?>" . 
                     "<requisicao-captura id='" . md5(date("YmdHisu")) . "' versao='" . $this->request_data['xsd_version'] . "'>" . 
                             "<tid>" . $this->request_data['tid'] . "</tid>" . 
                             self::dados_ec() . 
@@ -113,7 +119,7 @@ class cielo_xml_xsd {
      * TODO: Document this.
      */ 
     public function requisicao_consulta(){
-        return "<?xml version='1 . 0' encoding='ISO-8859-1'?>" . 
+        return "<?xml version='1.0' encoding='ISO-8859-1'?>" . 
                     "<requisicao-consulta id='" . md5(date("YmdHisu")) . "' versao='" . $this->request_data['xsd_version'] . "'>" . 
                             "<tid>" . $this->request_data['tid'] . "</tid>" . 
                             self::dados_ec() . 
@@ -124,7 +130,7 @@ class cielo_xml_xsd {
      * TODO: Document this.
      */ 
     public function requisicao_cancelamento(){
-        return "<?xml version='1 . 0' encoding='ISO-8859-1'?>" . 
+        return "<?xml version='1.0' encoding='ISO-8859-1'?>" . 
                     "<requisicao-cancelamento id='" . md5(date("YmdHisu")) . "' versao='" . $this->request_data['xsd_version'] . "'>" . 
                             "<tid>" . $this->request_data['tid'] . "</tid>" . 
                             self::dados_ec() . 

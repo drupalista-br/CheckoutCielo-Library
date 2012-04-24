@@ -121,6 +121,11 @@ class Cielo extends BrazilCards {
    * Skip Authentication And Go Straight To Authorization.
    */
   const CIELO_SKIP_AUTHENTICATION = 3;
+
+  /**
+   * Defines the International Currency code for Brazilian Real.
+   */
+  const CIELO_CURRENCY_CODE_BRL = 986;
     
   /**
    * Defines the Cielo's languange interface.
@@ -128,7 +133,8 @@ class Cielo extends BrazilCards {
    * Portuguese.
    */
   const CIELO_LANG_PT = 'PT';
-    
+
+   
   /**
    * Defines the Cielo's languange interface.
    *
@@ -225,7 +231,7 @@ class Cielo extends BrazilCards {
   /**
    * Holds the xml object.
    */
-  private $envelope;
+  public $envelope;
 
   public function setUp() {
     // Webservice settings.
@@ -269,7 +275,7 @@ class Cielo extends BrazilCards {
       // Cielo's xsd version.
       'xsd_version'   => '1.1.0',
       // Currency code, defaulted to BRL.
-      'currency_code' => 986,
+      'currency_code' => self::CIELO_CURRENCY_CODE_BRL,
       // Language code.
       'language_code' => self::CIELO_LANG_PT,
       // Date and time.
@@ -595,7 +601,7 @@ class Cielo extends BrazilCards {
    *  Cielo right after a response in which redirection for further processing
    *  is required.
    */
-  public function setAutoRedirect($value) {
+  public function setAutoRedirect($value = TRUE) {
     $this->envelope->request_data['autoRedirect'] = $value;
   }
   
