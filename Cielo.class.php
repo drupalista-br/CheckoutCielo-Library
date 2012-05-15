@@ -254,18 +254,21 @@ class Cielo extends BrazilCards {
     // Set the path to the CA file (SSL Public key) for the testing enviroment.
     $this->ws['curl_pubKey'] = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'cielo' . DIRECTORY_SEPARATOR . 'VeriSignClass3PublicPrimaryCertificationAuthority-G5.crt';
 
+    // Validate public key for curl requests.
+    $this->ws['curl_use_ssl'] = TRUE;
+
     if (!$this->is_test) {
       // Get the live preset.
       $this->ws = $live;
       // Uses CA from Trust Store.
       $this->ws['curl_pubKey'] = FALSE;
+      // SSL verification in the Sandbox has shown to be troublesome, so let's
+      // shut if off.
+      $this->ws['curl_use_ssl'] = FALSE;
     }
 
     // Manual version.
     $this->ws['manual_version'] = self::CIELO_DEV_MANUAL;
-
-    // Validate public key for curl requests.
-    $this->ws['curl_use_ssl'] = TRUE;
 
     // Extends the envelope object.
     $this->envelope = new cielo_xml_xsd();
@@ -296,7 +299,7 @@ class Cielo extends BrazilCards {
     }
     elseif ($_SERVER["SERVER_PORT"] <> 80) {
       // Append the port number to the end of the domain name.
-      $domain_name .= ':'.$_SERVER["SERVER_PORT"];
+      $domain_name .= ':' . $_SERVER["SERVER_PORT"];
     }
     // Assemble the returning url.
     $this->envelope->request_data['return_url'] = $http . $domain_name . $_SERVER["PHP_SELF"] . '?order=' . $this->order['pedido'];
@@ -627,7 +630,7 @@ class Cielo extends BrazilCards {
    */  
   private function httprequest($xsd) {
     $xsd = 'mensagem=' . $xsd;
-    
+
     $sessao_curl = curl_init();
     curl_setopt($sessao_curl, CURLOPT_URL, $this->ws['url']);
     curl_setopt($sessao_curl, CURLOPT_FAILONERROR, true);
