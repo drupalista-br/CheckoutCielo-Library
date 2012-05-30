@@ -445,16 +445,26 @@ class Cielo extends BrazilCards {
    * Helper function.
    */
   private function setPaymentAttributes() {
+    // The developer's manual says on its page 14 that <autorizar>
+    // 'AuthorizationType' must be always CIELO_SKIP_AUTHENTICATION when
+    // 'CardType' is CIELO_TYPE_CREDIT_CARD and 'CardFlag' is CIELO_FLAG_ELO.
+    if (!empty($this->arguments['payment']) &&
+        $this->arguments['payment']['CardType'] == self::CIELO_TYPE_CREDIT_CARD &&
+        $this->arguments['payment']['CardFlag'] == self::CIELO_FLAG_ELO) {
+        // Ignores whatever setting the administrator has set.
+        $this->arguments['payment']['AuthorizationType'] = self::CIELO_SKIP_AUTHENTICATION;
+    }
 
-    // Save payment attributes on parameters property.
+    // Save payment attributes in the parameters property.
     $this->parameters = $paymentAttributes = $this->arguments['payment'];
-    
-    if(isset($this->parameters['CardType']) && $this->parameters['CardType'] == self::CIELO_TYPE_DEBIT_CARD){
+
+    if(isset($this->parameters['CardType']) &&
+       $this->parameters['CardType'] == self::CIELO_TYPE_DEBIT_CARD){
       // Make sure authentication will always be switched on when card type is
       // Debit.
       $this->parameters['Authenticate'] == TRUE;
     }
-    
+
     /**
      * Set Default values for parameters.
      * #expected holds the list of valid values.
@@ -487,15 +497,16 @@ class Cielo extends BrazilCards {
         ),
       ),
       'Authenticate' => array(
-        '#default'  => 'true',
-        '#expected' => array('false', 'true'),
+        '#default'  => TRUE,
+        '#expected' => array(FALSE, TRUE),
       ),
     );
 
     foreach($checkList as $attribute => $settings) {
       // If parameter was set but is not one of the expected values then we
       // override it with its default value.
-      if (isset($paymentAttributes[$attribute]) && isset($settings['#expected']) && !in_array($paymentAttributes[$attribute], $settings['#expected'])) {
+      if (isset($paymentAttributes[$attribute]) && isset($settings['#expected']) &&
+          !in_array($paymentAttributes[$attribute], $settings['#expected'])) {
         $this->parameters[$attribute]  = $settings['#default'];
         // Set a warning.
         $this->setWarning(array("parameter_sent", "Parameter $attribute has an unexpected value and therefore has been ignored. The default value ". $settings['#default'] . " was used instead. Double check your application."));
