@@ -446,8 +446,9 @@ class Cielo extends BrazilCards {
    */
   private function setPaymentAttributes() {
     // The developer's manual says on its page 14 that <autorizar>
-    // 'AuthorizationType' must be always CIELO_SKIP_AUTHENTICATION when
-    // 'CardType' is CIELO_TYPE_CREDIT_CARD and 'CardFlag' is CIELO_FLAG_ELO.
+    // 'AuthorizationType' must always carries the  value of
+    // CIELO_SKIP_AUTHENTICATION when 'CardType' is CIELO_TYPE_CREDIT_CARD and
+    // 'CardFlag' is CIELO_FLAG_ELO.
     if (!empty($this->arguments['payment']) &&
         $this->arguments['payment']['CardType'] == self::CIELO_TYPE_CREDIT_CARD &&
         $this->arguments['payment']['CardFlag'] == self::CIELO_FLAG_ELO) {
