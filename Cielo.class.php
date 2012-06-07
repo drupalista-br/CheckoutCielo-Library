@@ -239,11 +239,6 @@ class Cielo {
   public $warnings = array();
 
   /**
-   * Name of the card operator. i.e. Cielo or Redecard.
-   */
-  public $operator;
-
-  /**
    * TODO: Document this.
    */
   public $membership = array();
