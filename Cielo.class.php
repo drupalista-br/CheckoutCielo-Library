@@ -15,123 +15,123 @@ class Cielo {
   /**
    * Cielo's URL for real transactions.
    */
-  const CIELO_LIVE_URL = 'https://ecommerce.cbmp.com.br/servicos/ecommwsec.do';
+  const LIVE_URL = 'https://ecommerce.cbmp.com.br/servicos/ecommwsec.do';
 
   /**
    * Cielo's Sandbox URL for testing transactions.
    */
-  const CIELO_SANDBOX_URL = 'https://qasecommerce.cielo.com.br/servicos/ecommwsec.do';
+  const SANDBOX_URL = 'https://qasecommerce.cielo.com.br/servicos/ecommwsec.do';
 
   /**
    * The membership number for when the merchants are going to collect card
    * details at their website.
    */
-  const CIELO_SANDBOX_ON_SITE_MERCHANT_ID = '1006993069';
+  const SANDBOX_ON_SITE_MERCHANT_ID = '1006993069';
 
   /**
    * The token for when the merchants are going to collect card details at their
    * website.
    */
-  const CIELO_SANDBOX_ON_SITE_MERCHANT_TOKEN = '25fbb99741c739dd84d7b06ec78c9bac718838630f30b112d033ce2e621b34f3';
+  const SANDBOX_ON_SITE_MERCHANT_TOKEN = '25fbb99741c739dd84d7b06ec78c9bac718838630f30b112d033ce2e621b34f3';
 
   /**
    * The membership number for when the merchants redirect customers to
    * Cielo's website where the card details are going to be collected.
    */
-  const CIELO_SANDBOX_OFF_SITE_MERCHANT_ID = '1001734898';
+  const SANDBOX_OFF_SITE_MERCHANT_ID = '1001734898';
 
   /**
    * The token for when the merchants redirect customers to Cielo's website
    * where the card details are going to be collected.
    */
-  const CIELO_SANDBOX_OFF_SITE_MERCHANT_TOKEN = 'e84827130b9837473681c2787007da5914d6359947015a5cdb2b8843db0fa832';
+  const SANDBOX_OFF_SITE_MERCHANT_TOKEN = 'e84827130b9837473681c2787007da5914d6359947015a5cdb2b8843db0fa832';
   
   /**
    * Cielo's Development Manual.
    */
-  const CIELO_DEV_MANUAL = '1.5.6 Last Updated in October 2010';
+  const DEV_MANUAL = '1.5.6 Last Updated in October 2010';
 
   /**
    * I am not quite sure what this indicator is for. Just following the manual.
    */
-  const CIELO_INDICADOR_DEFAULT = 1;
+  const INDICADOR_DEFAULT = 1;
 
   /**
    * I am not quite sure what this indicator is for. Just following the manual.
    */
-  const CIELO_INDICADOR_CVS_EMPTY = 0;
+  const INDICADOR_CVS_EMPTY = 0;
 
   /**
    * I am not quite sure what this indicator is for. Just following the manual.
    */
-  const CIELO_INDICADOR_MASTERCARD = 1;
+  const INDICADOR_MASTERCARD = 1;
 
   /**
    * Used for installment payment terms.
    *
    * The merchant is the credit provider.
    */
-  const CIELO_MERCHANT_IS_CREDITOR = '2';
+  const MERCHANT_IS_CREDITOR = '2';
   /**
    * Used for installment payment terms.
    *
    * A 3rd party (finantial institution) is the credit provider.
    */
-  const CIELO_CARD_ISSUER_IS_CREDITOR = '3';
+  const CARD_ISSUER_IS_CREDITOR = '3';
   
   /**
    * Defines the Card Mode, either Credit or Debit.
    *
    * Debit.
    */
-  const CIELO_TYPE_DEBIT_CARD = 'A';
+  const TYPE_DEBIT_CARD = 'A';
   
   /**
    * Defines the Card Mode, either Credit or Debit.
    *
    * Credit.
    */
-  const CIELO_TYPE_CREDIT_CARD = '1';
+  const TYPE_CREDIT_CARD = '1';
 
   /**
    * Authentication Type.
    *
    * Authentication Only.
    */
-  const CIELO_AUTHENTICATION_ONLY = 0;
+  const AUTHENTICATION_ONLY = 0;
     
   /**
    * Authentication Type.
    *
    * Authorize Only If Athenticated.
    */
-  const CIELO_AUTHORIZE_ONLY_IF_AUTHENTICATED = 1;
+  const AUTHORIZE_ONLY_IF_AUTHENTICATED = 1;
     
   /**
    * Authentication Type.
    *
    * Authorize Either Authenticated Or Not.
    */
-  const CIELO_AUTHORIZE_EITHER_AUTHENTICATED_OR_NOT = 2;
+  const AUTHORIZE_EITHER_AUTHENTICATED_OR_NOT = 2;
     
   /**
    * Authentication Type.
    *
    * Skip Authentication And Go Straight To Authorization.
    */
-  const CIELO_SKIP_AUTHENTICATION = 3;
+  const SKIP_AUTHENTICATION = 3;
 
   /**
    * Defines the International Currency code for Brazilian Real.
    */
-  const CIELO_CURRENCY_CODE_BRL = 986;
+  const CURRENCY_CODE_BRL = 986;
     
   /**
    * Defines the Cielo's languange interface.
    *
    * Portuguese.
    */
-  const CIELO_LANG_PT = 'PT';
+  const LANG_PT = 'PT';
 
    
   /**
@@ -139,93 +139,93 @@ class Cielo {
    *
    * Spanish.
    */
-  const CIELO_LANG_ES = 'ES';
+  const LANG_ES = 'ES';
     
   /**
    * Defines the Cielo's languange interface.
    *
    * English.
    */
-  const CIELO_LANG_EN = 'EN';
+  const LANG_EN = 'EN';
     
   /**
    * Defines the Card Flag.
    *
    * Master Card.
    */
-  const CIELO_FLAG_MASTERCARD = 'mastercard';
+  const FLAG_MASTERCARD = 'mastercard';
     
   /**
    * Defines the Card Flag.
    *
    * Visa.
    */
-  const CIELO_FLAG_VISA = 'visa';
+  const FLAG_VISA = 'visa';
     
   /**
    * Defines the Card Flag.
    *
    * Elo.
    */
-  const CIELO_FLAG_ELO = 'elo';
+  const FLAG_ELO = 'elo';
     
   /**
    * Defines the Remote Status of the Transaction.
    */
-  const CIELO_TRANSACTION_CREATED = 0;
+  const TRANSACTION_CREATED = 0;
     
   /**
    * Defines the Remote Status of the Transaction.
    */
-  const CIELO_IN_PROGRESS = 1;
+  const IN_PROGRESS = 1;
     
   /**
    * Defines the Remote Status of the Transaction.
    */
-  const CIELO_AUTHENTICATED = 2;
+  const AUTHENTICATED = 2;
     
   /**
    * Defines the Remote Status of the Transaction.
    */
-  const CIELO_NOT_AUTHENTICATED = 3;
+  const NOT_AUTHENTICATED = 3;
     
   /**
    * Defines the Remote Status of the Transaction.
    *
    * Authorized or still to be captured.
    */
-  const CIELO_AUTHORIZED = 4;
+  const AUTHORIZED = 4;
     
   /**
    * Defines the Remote Status of the Transaction.
    */
-  const CIELO_BEING_AUTHENTICATED = 10;
+  const BEING_AUTHENTICATED = 10;
     
   /**
    * Defines the Remote Status of the Transaction.
    *
    * Success.
    */
-  const CIELO_CAPTURED = 6;
+  const CAPTURED = 6;
     
   /**
    * Defines the Remote Status of the Transaction.
    *
    * Failure.
    */
-  const CIELO_AUTHORIZATION_DENIED = 5;
+  const AUTHORIZATION_DENIED = 5;
     
   /**
    * Defines the Remote Status of the Transaction.
    *
    * Failure.
    */
-  const CIELO_NOT_CAPTURED = 8;
+  const NOT_CAPTURED = 8;
     
   /**
    * Defines the Remote Status of the Transaction.
    */
-  const CIELO_VOIDED = 9;
+  const VOIDED = 9;
 
   /**
    * Holds the xml object.
@@ -288,15 +288,15 @@ class Cielo {
     // Webservice settings.
     // Define defaut values for both test and live services.
     $test = array(
-      'url' => self::CIELO_SANDBOX_URL,
-      'merchant' => self::CIELO_SANDBOX_ON_SITE_MERCHANT_ID,
-      'merchant_chave' => self::CIELO_SANDBOX_ON_SITE_MERCHANT_TOKEN,
-      'cielo' => self::CIELO_SANDBOX_OFF_SITE_MERCHANT_ID,
-      'cielo_chave' => self::CIELO_SANDBOX_OFF_SITE_MERCHANT_TOKEN,
+      'url' => self::SANDBOX_URL,
+      'merchant' => self::SANDBOX_ON_SITE_MERCHANT_ID,
+      'merchant_chave' => self::SANDBOX_ON_SITE_MERCHANT_TOKEN,
+      'cielo' => self::SANDBOX_OFF_SITE_MERCHANT_ID,
+      'cielo_chave' => self::SANDBOX_OFF_SITE_MERCHANT_TOKEN,
     );
 
     $live = array(
-      'url' => self::CIELO_LIVE_URL,
+      'url' => self::LIVE_URL,
     );
 
     // Sets the test credentials as default.
@@ -319,7 +319,7 @@ class Cielo {
     }
 
     // Manual version.
-    $this->ws['manual_version'] = self::CIELO_DEV_MANUAL;
+    $this->ws['manual_version'] = self::DEV_MANUAL;
 
     // Extends the envelope object.
     $this->envelope = new cielo_xml_xsd();
@@ -329,9 +329,9 @@ class Cielo {
       // Cielo's xsd version.
       'xsd_version'   => '1.1.0',
       // Currency code, defaulted to BRL.
-      'currency_code' => self::CIELO_CURRENCY_CODE_BRL,
+      'currency_code' => self::CURRENCY_CODE_BRL,
       // Language code.
-      'language_code' => self::CIELO_LANG_PT,
+      'language_code' => self::LANG_PT,
       // Date and time.
       'date_time' => date("Y-m-d\TH:i:s"),
       'tid' => '',
@@ -498,20 +498,20 @@ class Cielo {
   private function setPaymentAttributes() {
     // The developer's manual says on its page 14 that <autorizar>
     // 'AuthorizationType' must always carries the  value of
-    // CIELO_SKIP_AUTHENTICATION when 'CardType' is CIELO_TYPE_CREDIT_CARD and
-    // 'CardFlag' is CIELO_FLAG_ELO.
+    // SKIP_AUTHENTICATION when 'CardType' is TYPE_CREDIT_CARD and
+    // 'CardFlag' is FLAG_ELO.
     if (!empty($this->arguments['payment']) &&
-        $this->arguments['payment']['CardType'] == self::CIELO_TYPE_CREDIT_CARD &&
-        $this->arguments['payment']['CardFlag'] == self::CIELO_FLAG_ELO) {
+        $this->arguments['payment']['CardType'] == self::TYPE_CREDIT_CARD &&
+        $this->arguments['payment']['CardFlag'] == self::FLAG_ELO) {
         // Ignores whatever setting the administrator has set.
-        $this->arguments['payment']['AuthorizationType'] = self::CIELO_SKIP_AUTHENTICATION;
+        $this->arguments['payment']['AuthorizationType'] = self::SKIP_AUTHENTICATION;
     }
 
     // Save payment attributes in the parameters property.
     $this->parameters = $paymentAttributes = $this->arguments['payment'];
 
     if(isset($this->parameters['CardType']) &&
-       $this->parameters['CardType'] == self::CIELO_TYPE_DEBIT_CARD){
+       $this->parameters['CardType'] == self::TYPE_DEBIT_CARD){
       // Make sure authentication will always be switched on when card type is
       // Debit.
       $this->parameters['Authenticate'] == TRUE;
@@ -528,24 +528,24 @@ class Cielo {
         '#default' => 1,
       ),
       'Creditor' => array(
-        '#default' => self::CIELO_CARD_ISSUER_IS_CREDITOR,
-        '#expected' => array(self::CIELO_MERCHANT_IS_CREDITOR, self::CIELO_CARD_ISSUER_IS_CREDITOR),
+        '#default' => self::CARD_ISSUER_IS_CREDITOR,
+        '#expected' => array(self::MERCHANT_IS_CREDITOR, self::CARD_ISSUER_IS_CREDITOR),
       ),
       'CardType' => array(
-        '#default'  => self::CIELO_TYPE_CREDIT_CARD,
-        '#expected' => array(self::CIELO_TYPE_DEBIT_CARD, self::CIELO_TYPE_CREDIT_CARD),
+        '#default'  => self::TYPE_CREDIT_CARD,
+        '#expected' => array(self::TYPE_DEBIT_CARD, self::TYPE_CREDIT_CARD),
       ),
       'AutoCapturer' => array(
         '#default' => 'true',
         '#expected' => array('false', 'true'),
       ),
       'AuthorizationType' => array(
-        '#default'  => self::CIELO_AUTHORIZE_EITHER_AUTHENTICATED_OR_NOT,
+        '#default'  => self::AUTHORIZE_EITHER_AUTHENTICATED_OR_NOT,
         '#expected' => array(
-          self::CIELO_AUTHENTICATION_ONLY,
-          self::CIELO_AUTHORIZE_ONLY_IF_AUTHENTICATED,
-          self::CIELO_AUTHORIZE_EITHER_AUTHENTICATED_OR_NOT,
-          self::CIELO_SKIP_AUTHENTICATION,
+          self::AUTHENTICATION_ONLY,
+          self::AUTHORIZE_ONLY_IF_AUTHENTICATED,
+          self::AUTHORIZE_EITHER_AUTHENTICATED_OR_NOT,
+          self::SKIP_AUTHENTICATION,
         ),
       ),
       'Authenticate' => array(
@@ -596,13 +596,13 @@ class Cielo {
       $this->parameters['CardHandling'] = TRUE;
 
       // Set default indicator as 1.
-      $this->envelope->request_data['indicador'] = self::CIELO_INDICADOR_DEFAULT;
+      $this->envelope->request_data['indicador'] = self::INDICADOR_DEFAULT;
    
       if (empty($paymentAttributes['CVC'])) {
-        $this->envelope->request_data['indicador'] = self::CIELO_INDICADOR_CVS_EMPTY;
+        $this->envelope->request_data['indicador'] = self::INDICADOR_CVS_EMPTY;
       }
       elseif ($paymentAttributes['CardFlag'] == 'mastercard') {
-        $this->envelope->request_data['indicador'] = self::CIELO_INDICADOR_MASTERCARD;
+        $this->envelope->request_data['indicador'] = self::INDICADOR_MASTERCARD;
       }
     }
     
@@ -743,16 +743,16 @@ class Cielo {
   static public function get_card_flags($valued = TRUE, $function_name = NULL) {
     if ($valued) {
       $result = array(
-        self::CIELO_FLAG_MASTERCARD => 'Mastercard',
-        self::CIELO_FLAG_VISA => 'Visa',
-        self::CIELO_FLAG_ELO => 'Elo',
+        self::FLAG_MASTERCARD => 'Mastercard',
+        self::FLAG_VISA => 'Visa',
+        self::FLAG_ELO => 'Elo',
       );
     }
     else {
       $result = array(
-        self::CIELO_FLAG_MASTERCARD,
-        self::CIELO_FLAG_VISA,
-        self::CIELO_FLAG_ELO,
+        self::FLAG_MASTERCARD,
+        self::FLAG_VISA,
+        self::FLAG_ELO,
       );
     }
     if ($function_name && function_exists($function_name)) {
@@ -776,18 +776,18 @@ class Cielo {
   static public function get_authorization_options($valued = TRUE, $function_name = NULL) {
     if ($valued) {
       $result = array(
-        self::CIELO_AUTHENTICATION_ONLY => 'Authentication only. (use this only if you know what you are doing.)',
-        self::CIELO_AUTHORIZE_ONLY_IF_AUTHENTICATED => 'Authorize only if authenticaded',
-        self::CIELO_AUTHORIZE_EITHER_AUTHENTICATED_OR_NOT => 'Authorize either authenticated or not',
-        self::CIELO_SKIP_AUTHENTICATION => 'Skip authentication and go straight to authorization',
+        self::AUTHENTICATION_ONLY => 'Authentication only. (use this only if you know what you are doing.)',
+        self::AUTHORIZE_ONLY_IF_AUTHENTICATED => 'Authorize only if authenticaded',
+        self::AUTHORIZE_EITHER_AUTHENTICATED_OR_NOT => 'Authorize either authenticated or not',
+        self::SKIP_AUTHENTICATION => 'Skip authentication and go straight to authorization',
       );
     }
     else {
       $result = array(
-        self::CIELO_AUTHENTICATION_ONLY,
-        self::CIELO_AUTHORIZE_ONLY_IF_AUTHENTICATED,
-        self::CIELO_AUTHORIZE_EITHER_AUTHENTICATED_OR_NOT,
-        self::CIELO_SKIP_AUTHENTICATION,
+        self::AUTHENTICATION_ONLY,
+        self::AUTHORIZE_ONLY_IF_AUTHENTICATED,
+        self::AUTHORIZE_EITHER_AUTHENTICATED_OR_NOT,
+        self::SKIP_AUTHENTICATION,
       );
     }
     if ($function_name && function_exists($function_name)) {
@@ -811,16 +811,16 @@ class Cielo {
   static public function get_languages($valued = TRUE, $function_name = NULL) {
     if ($valued) {
       $result = array(
-        self::CIELO_LANG_PT => 'Portuguese',
-        self::CIELO_LANG_EN => 'English',
-        self::CIELO_LANG_ES => 'Spanish',
+        self::LANG_PT => 'Portuguese',
+        self::LANG_EN => 'English',
+        self::LANG_ES => 'Spanish',
       );
     }
     else {
       $result = array(
-        self::CIELO_LANG_PT,
-        self::CIELO_LANG_EN,
-        self::CIELO_LANG_ES,
+        self::LANG_PT,
+        self::LANG_EN,
+        self::LANG_ES,
       );
     }
     if ($function_name && function_exists($function_name)) {
@@ -844,14 +844,14 @@ class Cielo {
   static public function get_installment_creditor_options($valued = TRUE, $function_name = NULL) {
     if ($valued) {
       $result = array(
-        self::CIELO_MERCHANT_IS_CREDITOR => 'Merchant is the creditor.',
-        self::CIELO_CARD_ISSUER_IS_CREDITOR => 'Card issuer / Cielo are the creditors.',
+        self::MERCHANT_IS_CREDITOR => 'Merchant is the creditor.',
+        self::CARD_ISSUER_IS_CREDITOR => 'Card issuer / Cielo are the creditors.',
       );
     }
     else {
       $result = array(
-        self::CIELO_MERCHANT_IS_CREDITOR,
-        self::CIELO_CARD_ISSUER_IS_CREDITOR,
+        self::MERCHANT_IS_CREDITOR,
+        self::CARD_ISSUER_IS_CREDITOR,
       );
     }
     if ($function_name && function_exists($function_name)) {
