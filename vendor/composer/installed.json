@@ -1,0 +1,39 @@
+[
+    {
+        "name": "developercielo/webservice-1.5-php",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/DeveloperCielo/Webservice-1.5-php.git",
+            "reference": "de6d2532643f9d4fba52d12bc1e646bd42355d08"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/DeveloperCielo/Webservice-1.5-php/zipball/de6d2532643f9d4fba52d12bc1e646bd42355d08",
+            "reference": "de6d2532643f9d4fba52d12bc1e646bd42355d08",
+            "shasum": ""
+        },
+        "require": {
+            "ext-libxml": "*",
+            "php": ">=5.4"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "@stable"
+        },
+        "time": "2015-07-21 12:00:23",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "psr-0": {
+                "Cielo": "src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "description": "SDK PHP para integração com webservice 1.5 da Cielo",
+        "homepage": "https://github.com/DeveloperCielo/Webservice-1.5-php"
+    }
+]
