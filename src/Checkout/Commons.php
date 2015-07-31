@@ -25,6 +25,9 @@ class Commons {
 		if (property_exists($this, $property_name)) {
 		  $this->{$property_name} = $property_value;
 		}
+		else {
+		  throw new \Exception("Property '$property_name' is not recognised.");
+		}
 	  }
 	}
 

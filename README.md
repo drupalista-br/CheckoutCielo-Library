@@ -91,7 +91,7 @@
     
     // Instantiate the options object.
     $properties = [
-      'AntifraudEnabled' => TRUE,
+      'AntifraudEnabled' => FALSE,
     ];
     $Options = new Options($properties);
     
@@ -115,3 +115,4 @@
     $Transaction = new Transaction($Merchant, $Order);
     $Transaction->request_new_transaction();
     $Transaction->redirect_to_cielo();
+
