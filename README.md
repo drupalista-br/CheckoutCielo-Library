@@ -15,7 +15,7 @@
       CieloCheckout\Transaction,
       Cielo\Merchant;
     
-    include_once "/opt/lampp/htdocs/sites/loja.nortaox.com/modules/commerce_cielo/vendor/autoload.php";
+    include_once "vendor/autoload.php";
     
     // Instantiate the cart item object and set it to an array of product itemns.
     $properties = [
