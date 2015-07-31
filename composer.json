@@ -12,7 +12,7 @@
         }
     ],
     "require": {
-        "developercielo/webservice-1.5-php": "dev-master"
+        "developercielo/webservice-1.5-php": "dev-master#de6d2532643f9d4fba52d12bc1e646bd42355d08"
     },
     "autoload": {
         "psr-4": {

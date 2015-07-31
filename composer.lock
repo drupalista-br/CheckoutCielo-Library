@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "a35825ecfc7816d7e07af70989ed14b6",
+    "hash": "1c22015c8abfe467fd94d1a56b87cc9b",
     "packages": [
         {
             "name": "developercielo/webservice-1.5-php",
