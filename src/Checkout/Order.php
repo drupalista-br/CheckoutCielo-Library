@@ -43,4 +43,16 @@ class Order extends Commons {
   protected function set_Cart(Cart $Cart) {
 	$this->Cart = $Cart;
   }
+
+  protected function set_Payment(Payment $Payment) {
+	$this->Payment = $Payment;
+  }
+
+  protected function set_Customer(Customer $Customer) {
+	$this->Customer = $Customer;
+  }
+
+  protected function set_Options(Options $Options) {
+	$this->Options = $Options;
+  }
 }

@@ -41,9 +41,11 @@ class Shipping extends Commons {
   }
 
   private function Services_validate() {
-	foreach ($this->Services as $delta => $Service) {
-	  if (!$Service instanceof Services) {
-		throw new \Exception("$Service on index $delta of 'Services' is not an instance of Services.");
+	if (!empty($this->Services)) {
+	  foreach ($this->Services as $delta => $Service) {
+		if (!$Service instanceof Services) {
+		  throw new \Exception("$Service on index $delta of 'Services' is not an instance of Services.");
+		}
 	  }
 	}
   }

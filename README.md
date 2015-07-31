@@ -1,5 +1,5 @@
 
-** Example:
+** Exemplo:
 
 ```php
     <?php
@@ -12,6 +12,9 @@
       CieloCheckout\Address,
       CieloCheckout\Services,
       CieloCheckout\Shipping,
+      CieloCheckout\Payment,
+      CieloCheckout\Customer,
+      CieloCheckout\Options,
       CieloCheckout\Transaction,
       Cielo\Merchant;
     
@@ -40,12 +43,12 @@
     
     // Instantiate the shipping address object.
     $properties = [
-      'Street' => 'Endereço de entrega',
+      'Street' => 'Rua Em Algum Lugar',
       'Number' => '123',
       'Complement' => '',
-      'District' => 'Bairro da entrega',
-      'City' => 'Cidade da entrega',
-      'State' => 'SP',
+      'District' => 'Setor F',
+      'City' => 'Alta Floresta',
+      'State' => 'MT',
     ];
     $Address = new Address($properties);
     
@@ -62,13 +65,35 @@
     
     // Instantiate the shipping object.
     $properties = [
-      'Type' => 'Correios',
-      'SourceZipCode' => '14400000',
-      'TargetZipCode' => '11000000',
+      'Type' => 'Free',
+      'SourceZipCode' => '78580000',
+      'TargetZipCode' => '78580000',
       'Address' => $Address,
       'Services' => $Services,
     ];
     $Shipping = new Shipping($properties);
+    
+    // Instantiate the payment object.
+    $properties = [
+      'BoletoDiscount' => 0,
+      'DebitDiscount' => 10,
+    ];
+    $Payment = new Payment($properties);
+    
+    // Instantiate the customer object.
+    $properties = [
+      'Identity' => '83255885515',
+      'FullName' => 'Fulano Comprador da Silva',
+      'Email' => 'fulano@email.com',
+      'Phone' => '11999999999',
+    ];
+    $Customer = new Customer($properties);
+    
+    // Instantiate the options object.
+    $properties = [
+      'AntifraudEnabled' => TRUE,
+    ];
+    $Options = new Options($properties);
     
     // Instantiate the order object.
     $properties = [
@@ -77,15 +102,16 @@
       // Instantiate the cart object.
       'Cart' => new Cart(['Discount' => $Discount, 'Items' => $Items]),
       'Shipping' => $Shipping,
+      'Payment' => $Payment,
+      'Customer' => $Customer,
+      'Options' => $Options,
     ];
     $Order = new Order($properties);
     
-    //print_r(json_encode($Order));
-    
     // Instantiate the merchant object.
-    $Merchant = new Merchant('merchant id numer here', 'merchant key here');
+    $Merchant = new Merchant('informe o id do lojista aqui', 'informe a chave aqui');
     
     // Instantiate the transaction object.
     $Transaction = new Transaction($Merchant, $Order);
-    $Transaction->request();
-    print_r($Transaction->response);
+    $Transaction->request_new_transaction();
+    $Transaction->redirect_to_cielo();

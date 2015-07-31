@@ -31,7 +31,7 @@ class Transaction {
   /**
    * Sends the order object over to Cielo and listen for a response.
    */
-  public function request() {
+  public function request_new_transaction() {
 	$merchant_key = $this->Merchant->getAffiliationKey();
 	$curl = curl_init();
 
@@ -45,10 +45,49 @@ class Transaction {
 	  'Content-Type: application/json'
 	]);
 
-	$response = curl_exec($curl);
+	$this->response = json_decode(curl_exec($curl));
 	curl_close($curl);
+  }
 
-	$this->response = json_decode($response);
+  /**
+   * Redirects the customers to Cielo for completing their checkout payment.
+   */
+  public function redirect_to_cielo() {
+	if (php_sapi_name() === 'cli') {
+	  throw new \Exception("Can not redirect to Cielo. You gotta run this script from a web browser.");
+	}
+	else {
+	  $this->response_validate();
+	  header("Location: {$this->response->settings->checkoutUrl}");
+	}
+  }
+
+  /**
+   * Checks if a new transaction response contains the valid data necessary
+   * for redirecting the customer to Cielo.
+   */
+  private function response_validate() {
+	if (isset($this->response->settings)) {
+	  $settings = $this->response->settings;
+	  // Check if merchant profile is valid.
+	  if (isset($settings->profile) && $settings->profile != 'CheckoutCielo') {
+		throw new \Exception("Merchant profile at Cielo is invalid.");
+	  }
+
+	  if (!isset($settings->checkoutUrl) || empty($settings->checkoutUrl)) {
+		throw new \Exception("Cielo's response hasn't a redirect URL in it.");
+	  }
+	}
+	else {
+	  if (isset($this->response->message)) {
+		// Cielo has thrown an error.
+		throw new \Exception("{$this->response->message} Check response property for more details.");
+	  }
+	  else {
+		// Something went wrong but we don't know what.
+		throw new \Exception("Something went wrong requesting a new transaction. Check response property for more details.");
+	  }
+	}
   }
 
   /**
