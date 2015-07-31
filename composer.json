@@ -1,0 +1,23 @@
+{
+    "name": "drupalista-br/cielo-php-library",
+    "description": "Biblioteca para integração ao perfil CheckoutCielo v2+ da operadora Cielo de Cartões.",
+    "homepage": "http://lojas.nortaox.com",
+    "license": "GPL-2.0+",
+    "keywords": ["Pagamento", "Cielo", "Cartão de Crédito", "Integração"],
+    "authors": [
+        {
+            "name": "Francisco Luz",
+            "email": "franciscoferreiraluz@yahoo.com.au",
+            "homepage": "http://lojas.nortaox.com"
+        }
+    ],
+    "require": {
+        "developercielo/webservice-1.5-php": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "CieloCheckout\\": "src/Checkout"
+        }
+    }
+
+}
