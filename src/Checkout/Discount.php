@@ -12,7 +12,7 @@ class Discount extends Commons {
    * List of valid values for $this->Type.
    * Index = Type | Value = Description
    */
-  private $Type_validate = [
+  private static $Type_validate = [
 	'Amount' => 'Valor de desconto fixo.',
 	'Percent' => 'Porcentagem do desconto.',
   ];
@@ -24,7 +24,7 @@ class Discount extends Commons {
 
   private function Type_validate() {
 	if (!empty($this->Type)) {
-	  if (!isset($this->Type_validate[$this->Type])) {
+	  if (!isset(self::$Type_validate[$this->Type])) {
 		throw new \Exception("'Type == {$this->Type}' is invalid.");
 	  }
 	}
@@ -49,6 +49,6 @@ class Discount extends Commons {
    *   Index = Type | Value = Description
    */
   public function get_Types() {
-	return $this->Type_validate;
+	return self::$Type_validate;
   }
 }

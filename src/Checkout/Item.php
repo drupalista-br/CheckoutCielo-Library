@@ -17,7 +17,7 @@ class Item extends Commons {
    * List of valid values for $this->Type.
    * Index = Type | Value = Description
    */
-  private $Type_validate = [
+  private static $Type_validate = [
 	'Asset' => 'Material Físico',
 	'Digital' => 'Produtos Digitais',
 	'Service' => 'Serviços',
@@ -42,7 +42,7 @@ class Item extends Commons {
   }
 
   private function Type_validate() {
-	if (!isset($this->Type_validate[$this->Type])) {
+	if (!isset(self::$Type_validate[$this->Type])) {
 	  throw new \Exception("'Type == {$this->Type}' is invalid.");
 	}
   }
@@ -59,6 +59,6 @@ class Item extends Commons {
    *   Index = Type | Value = Description
    */
   public function get_Types() {
-	return $this->Type_validate;
+	return self::$Type_validate;
   }
 }
