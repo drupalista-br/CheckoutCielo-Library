@@ -94,7 +94,7 @@ class Transaction {
    *  List of all transaction statuses.
    *  Index = Status Code | Value = Status Name.
    */
-  public function get_response_statuses() {
+  public static function get_response_statuses() {
     return [
       self::STATUS_CODE_CREATED => 'Transação Criada',
       self::STATUS_CODE_IN_PROGRESS => 'Transação em Andamento',
