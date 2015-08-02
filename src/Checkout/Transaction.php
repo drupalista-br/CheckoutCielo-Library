@@ -17,7 +17,9 @@ class Transaction {
     STATUS_CODE_NOT_AUTHORIZED = 5,
     STATUS_CODE_CAPTURED = 6,
     STATUS_CODE_CANCELED = 9,
-  
+    STATUS_CODE_BEING_AUTHENTICATED = 10,
+    STATUS_CODE_BEING_CANCELED = 12,
+
     ENDPOINT = 'https://cieloecommerce.cielo.com.br/api/public/v1/orders';
 
   public $response;
@@ -109,6 +111,8 @@ class Transaction {
       self::STATUS_CODE_NOT_AUTHORIZED => 'Transação não Autorizada',
       self::STATUS_CODE_CAPTURED => 'Transação Capturada',
       self::STATUS_CODE_CANCELED => 'Transação Cancelada',
+      self::STATUS_CODE_BEING_AUTHENTICATED => 'Transação em Autenticação',
+      self::STATUS_CODE_BEING_CANCELED => 'Transação em Cancelamento',
     ];
   }
 }

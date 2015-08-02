@@ -20,6 +20,6 @@ em https://github.com/DeveloperCielo/Webservice-1.5-php
 * [Clique aqui](https://github.com/drupalista-br/CheckoutCielo-Library/blob/2.x-dev/example.php) para ver um
 script de exemplo;
 * [Clique aqui](http://developercielo.github.io/Checkout-Cielo/) para ler as instruções sobre como configurar o
-backend da Cielo em mode de teste.
+backend da Cielo em modo de teste.
 * [Clique aqui](https://github.com/drupalista-br/CheckoutCielo-Library/blob/2.x-dev/card_numbers_for_testing.txt)
-para ver uma lista com dados de cartões de crédito e débito para usar;
+para ver uma lista com dados de cartões de crédito e débito para usar no modo de teste;
