@@ -108,9 +108,9 @@ class Transaction {
       self::STATUS_CODE_AUTHENTICATED => 'Transação Autenticada',
       self::STATUS_CODE_NOT_AUTHENTICATED => 'Transação não Autenticada',
       self::STATUS_CODE_AUTHORIZED => 'Transação Autorizada',
-      self::STATUS_CODE_NOT_AUTHORIZED => 'Transação não Autorizada',
-      self::STATUS_CODE_CAPTURED => 'Transação Capturada',
-      self::STATUS_CODE_CANCELED => 'Transação Cancelada',
+      self::STATUS_CODE_NOT_AUTHORIZED => 'Recusado',
+      self::STATUS_CODE_CAPTURED => 'Pago',
+      self::STATUS_CODE_CANCELED => 'Cancelado',
       self::STATUS_CODE_BEING_AUTHENTICATED => 'Transação em Autenticação',
       self::STATUS_CODE_BEING_CANCELED => 'Transação em Cancelamento',
     ];
