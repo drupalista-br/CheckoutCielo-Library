@@ -4,8 +4,8 @@ namespace CieloCheckout;
 
 class Customer extends Commons {
   public
-	$Identity,
-	$FullName,
-	$Email,
-	$Phone;
+    $Identity,
+    $FullName,
+    $Email,
+    $Phone;
 }

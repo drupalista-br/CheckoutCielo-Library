@@ -1,5 +1,4 @@
-
-** Exemplo:
+#Exemplo:
 
 ```php
     <?php
@@ -109,10 +108,14 @@
     $Order = new Order($properties);
     
     // Instantiate the merchant object.
-    $Merchant = new Merchant('informe o id do lojista aqui', 'informe a chave aqui');
+    $Merchant = new Merchant($id, $key);
     
     // Instantiate the transaction object.
     $Transaction = new Transaction($Merchant, $Order);
     $Transaction->request_new_transaction();
+    
+    print_r($Transaction->response);
+    
+    // This will throw an exception when running from terminal cli.
     $Transaction->redirect_to_cielo();
 
