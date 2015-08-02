@@ -16,7 +16,7 @@ use
 
 include_once "vendor/autoload.php";
 
-// Instantiate the cart item object and set it to an array of product itemns.
+// Instantiate cart item object and set it to an array of product itemns.
 $properties = [
   'Name' => 'Nome do produto',
   'Description' => 'Descrição do produto',
@@ -37,7 +37,7 @@ $properties = [
 ];
 $Discount = new Discount($properties);
 
-// Instantiate the shipping address object.
+// Instantiate shipping address' object.
 $properties = [
   'Street' => 'Rua Em Algum Lugar',
   'Number' => '123',
@@ -48,7 +48,7 @@ $properties = [
 ];
 $Address = new Address($properties);
 
-// Instantiate the shipping services object.
+// Instantiate shipping services' object.
 $properties = [
   'Name' => 'Serviço de frete',
   'Price' => 123,
@@ -59,7 +59,7 @@ $Services = [
   new Services($properties),
 ];
 
-// Instantiate the shipping object.
+// Instantiate shipping's object.
 $properties = [
   'Type' => 'Free',
   'SourceZipCode' => '78580000',
@@ -69,14 +69,14 @@ $properties = [
 ];
 $Shipping = new Shipping($properties);
 
-// Instantiate the payment object.
+// Instantiate payment's object.
 $properties = [
   'BoletoDiscount' => 0,
   'DebitDiscount' => 10,
 ];
 $Payment = new Payment($properties);
 
-// Instantiate the customer object.
+// Instantiate customer's object.
 $properties = [
   'Identity' => '83255885515',
   'FullName' => 'Fulano Comprador da Silva',
@@ -85,17 +85,17 @@ $properties = [
 ];
 $Customer = new Customer($properties);
 
-// Instantiate the options object.
+// Instantiate options' object.
 $properties = [
   'AntifraudEnabled' => FALSE,
 ];
 $Options = new Options($properties);
 
-// Instantiate the order object.
+// Instantiate order's object.
 $properties = [
   'OrderNumber' => '1234',
   'SoftDescriptor' => 'Test',
-  // Instantiate the cart object.
+  // Instantiate cart's object.
   'Cart' => new Cart(['Discount' => $Discount, 'Items' => $Items]),
   'Shipping' => $Shipping,
   'Payment' => $Payment,
@@ -104,10 +104,10 @@ $properties = [
 ];
 $Order = new Order($properties);
 
-// Instantiate the merchant object.
+// Instantiate merchant's object.
 $Merchant = new Merchant($id, $key);
 
-// Instantiate the transaction object.
+// Instantiate transaction's object.
 $Transaction = new Transaction($Merchant, $Order);
 $Transaction->request_new_transaction();
 
