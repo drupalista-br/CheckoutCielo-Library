@@ -49,7 +49,7 @@ class Transaction {
   }
 
   /**
-   * Redirects the customers to Cielo for completing their checkout payment.
+   * Redirects customers to Cielo for completing their checkout payment.
    */
   public function redirect_to_cielo() {
     if (php_sapi_name() === 'cli') {
@@ -70,21 +70,21 @@ class Transaction {
       $settings = $this->response->settings;
       // Check if merchant profile is valid.
       if (isset($settings->profile) && $settings->profile != 'CheckoutCielo') {
-      throw new \Exception("Merchant profile at Cielo is invalid.");
+        throw new \Exception("Merchant profile at Cielo is invalid.");
       }
   
       if (!isset($settings->checkoutUrl) || empty($settings->checkoutUrl)) {
-      throw new \Exception("Cielo's response hasn't a redirect URL in it.");
+        throw new \Exception("Cielo's response hasn't a redirect URL in it.");
       }
     }
     else {
       if (isset($this->response->message)) {
-      // Cielo has thrown an error.
-      throw new \Exception("{$this->response->message} Check response property for more details.");
+        // Cielo has thrown an error.
+        throw new \Exception("{$this->response->message} Check response property for more details.");
       }
       else {
-      // Something went wrong but we don't know what.
-      throw new \Exception("Something went wrong requesting a new transaction. Check response property for more details.");
+        // Something went wrong but we don't know what.
+        throw new \Exception("Something went wrong requesting a new transaction. Check response property for more details.");
       }
     }
   }
