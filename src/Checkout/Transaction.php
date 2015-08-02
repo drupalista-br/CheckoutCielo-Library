@@ -1,7 +1,10 @@
 <?php
 
 namespace CieloCheckout;
-use Cielo\Merchant;
+
+use
+  Cielo\Merchant,
+  Httpful\Request;
 
 class Transaction {
 
@@ -33,20 +36,16 @@ class Transaction {
    */
   public function request_new_transaction() {
 	$merchant_key = $this->Merchant->getAffiliationKey();
-	$curl = curl_init();
 
-	curl_setopt($curl, CURLOPT_URL, self::ENDPOINT);
-	curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
-	curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
-	curl_setopt($curl, CURLOPT_POST, TRUE);
-	curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($this->Order));
-	curl_setopt($curl, CURLOPT_HTTPHEADER, [
-	  "MerchantId: $merchant_key",
-	  'Content-Type: application/json'
-	]);
+	$response = Request::post(self::ENDPOINT)
+		->withoutStrictSsl()
+		->sendsJson()
+		->expectsJson()
+		->body(json_encode($this->Order))
+		->addHeader('MerchantId', $merchant_key)
+		->send();
 
-	$this->response = json_decode(curl_exec($curl));
-	curl_close($curl);
+	$this->response = $response->body;
   }
 
   /**
