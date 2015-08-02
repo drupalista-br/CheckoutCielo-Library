@@ -33,8 +33,11 @@ class Transaction {
 
   /**
    * Sends the order object over to Cielo and listen for a response.
+   *
+   * @param Bool $validate_response
+   *   Whether or not the response from Cielo should be validated.
    */
-  public function request_new_transaction() {
+  public function request_new_transaction($validate_response = TRUE) {
     $merchant_key = $this->Merchant->getAffiliationKey();
 
     $response = Request::post(self::ENDPOINT)
@@ -46,6 +49,9 @@ class Transaction {
       ->send();
 
     $this->response = $response->body;
+    if ($validate_response) {
+      $this->response_validate();
+    }
   }
 
   /**
@@ -56,7 +62,6 @@ class Transaction {
       throw new \Exception("Can not redirect to Cielo. You gotta run this script from a web browser.");
     }
     else {
-      $this->response_validate();
       header("Location: {$this->response->settings->checkoutUrl}");
     }
   }
@@ -65,7 +70,7 @@ class Transaction {
    * Checks if a new transaction response contains the valid data necessary
    * for redirecting the customer to Cielo.
    */
-  private function response_validate() {
+  public function response_validate() {
     if (isset($this->response->settings)) {
       $settings = $this->response->settings;
       // Check if merchant profile is valid.
