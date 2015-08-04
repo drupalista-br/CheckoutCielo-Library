@@ -104,10 +104,7 @@ class Commons {
           }
     
           if ($check_result !== $negate) {
-            $not = 'not';
-            if ($negate) {
-              $not = '';
-            }
+            $not = ($negate) ? NULL : 'not';
             throw new \Exception("'$property_name' does not pass the check for $not {$callback_function_name}.");
           }
         }
