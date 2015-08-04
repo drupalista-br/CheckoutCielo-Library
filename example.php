@@ -121,3 +121,11 @@ catch(Exception $e) {
   $msg = $e->getMessage();
   print "$msg\n";
 }
+
+// Check out the Transaction class at src/Checkout/Transaction.php
+// There you will find a constant for each of the transaction status codes that
+// will eventually be sent by Cielo to your app via POST method.
+
+// There is also a static method for retrieving an array of all transaction
+// status codes available.
+$statuses = Transaction::get_response_statuses();
