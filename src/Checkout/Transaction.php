@@ -9,16 +9,30 @@ use
 class Transaction {
 
   const
-    STATUS_CODE_CREATED = 0,
-    STATUS_CODE_IN_PROGRESS = 1,
-    STATUS_CODE_AUTHENTICATED = 2,
-    STATUS_CODE_NOT_AUTHENTICATED = 3,
-    STATUS_CODE_AUTHORIZED = 4,
-    STATUS_CODE_NOT_AUTHORIZED = 5,
-    STATUS_CODE_CAPTURED = 6,
-    STATUS_CODE_CANCELED = 9,
-    STATUS_CODE_BEING_AUTHENTICATED = 10,
-    STATUS_CODE_BEING_CANCELED = 12,
+    /**
+     * For all payment methods.
+     */
+    STATUS_CODE_PENDING = 1,
+    /**
+     * Credit Cards only.
+     */
+    STATUS_CODE_AUTHORIZED = 7,
+    /**
+     * For all payment methods.
+     */
+    STATUS_CODE_PAID = 2,
+    /**
+     * Credit Cards only.
+     */
+    STATUS_CODE_REFUSED = 3,
+    /**
+     * For all payment methods.
+     */
+    STATUS_CODE_FAILED = 6,
+    /**
+     * Credit Cards primarily.
+     */
+    STATUS_CODE_CANCELED = 5,
 
     ENDPOINT = 'https://cieloecommerce.cielo.com.br/api/public/v1/orders';
 
@@ -103,16 +117,12 @@ class Transaction {
    */
   public static function get_response_statuses() {
     return [
-      self::STATUS_CODE_CREATED => 'Transação Criada',
-      self::STATUS_CODE_IN_PROGRESS => 'Transação em Andamento',
-      self::STATUS_CODE_AUTHENTICATED => 'Transação Autenticada',
-      self::STATUS_CODE_NOT_AUTHENTICATED => 'Recusado | Não Autenticou',
-      self::STATUS_CODE_AUTHORIZED => 'Transação Autorizada',
-      self::STATUS_CODE_NOT_AUTHORIZED => 'Recusado | Não Autorizou',
-      self::STATUS_CODE_CAPTURED => 'Pago',
+      self::STATUS_CODE_PENDING => 'Pendente',
+      self::STATUS_CODE_AUTHORIZED => 'Autorizado',
+      self::STATUS_CODE_PAID => 'Pago',
+      self::STATUS_CODE_REFUSED => 'Negado',
+      self::STATUS_CODE_FAILED => 'Não Finalizado',
       self::STATUS_CODE_CANCELED => 'Cancelado',
-      self::STATUS_CODE_BEING_AUTHENTICATED => 'Transação em Autenticação',
-      self::STATUS_CODE_BEING_CANCELED => 'Transação em Cancelamento',
     ];
   }
 }
