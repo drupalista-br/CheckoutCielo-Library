@@ -68,7 +68,7 @@ class Shipping extends Commons {
    *   A list of valid values for $this->Type.
    *   Index = Type | Value = Description
    */
-  public function get_Types() {
+  public static function get_Types() {
     return self::$Type_validate;
   }
 }
