@@ -32,6 +32,7 @@ class Shipping extends Commons {
   protected function validate() {
     $this->Type_validate();
     $this->Services_validate();
+    $this->TargetZipCode_validate();
   }
 
   private function Type_validate() {
@@ -46,6 +47,14 @@ class Shipping extends Commons {
         if (!$Service instanceof Services) {
           throw new \Exception("$Service on index $delta of 'Services' is not an instance of Services.");
         }
+      }
+    }
+  }
+
+  private function TargetZipCode_validate() {
+    if (!empty($this->Address)) {
+      if (empty($this->TargetZipCode) || (strlen($this->TargetZipCode) != 8) ) {
+        throw new \Exception("TargetZipCode is required when sending Shipping Address. It must be 8 digits long.");
       }
     }
   }
